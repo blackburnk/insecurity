@@ -15,41 +15,110 @@
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="top|center"
         android:keepScreenOn="true"
-        android:text="@string/dummy_content"
+        android:text="@string/main_login"
         android:textColor="#33b5e5"
         android:textSize="50sp"
         android:textStyle="bold" />
+    
+ <RelativeLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:drawingCacheQuality="auto"
+    android:layout_margin="10dp">  
+     <TextView
+         android:id="@+id/main_email_address_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center_vertical"
+         android:text="@string/main_emailAddress"
+         android:layout_marginRight="10dp"
+         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <!--
-         This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows.
-    -->
+     <EditText
+         android:id="@+id/main_email_address_edit_text"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@id/main_email_address_text"
+         android:inputType="textEmailAddress" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true" >
+     <TextView
+         android:id="@+id/main_password_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center_vertical"
+         android:layout_below="@id/main_email_address_text"
+         android:layout_marginTop="10dp"
+         android:layout_marginRight="10dp"
+         android:text="@string/main_password"
+         android:textAppearance="?android:attr/textAppearanceMedium" />
+     
+     <EditText
+         android:id="@+id/main_password_edit_text"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_toRightOf="@id/main_password_text"
+         android:layout_below="@id/main_email_address_text"
+         android:layout_marginTop="10dp"
+         android:inputType="textPassword" />
+     
+      <Button
+          android:text="@string/main_loginButton"
+           android:layout_width="wrap_content" 
+           android:layout_height="wrap_content" 
+           android:layout_below="@id/main_password_edit_text"
+           android:layout_centerHorizontal="true"
+           android:layout_alignParentRight="true"
+           android:layout_alignParentLeft="true"
+           android:id="@+id/main_login_button" />
+</RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?buttonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent" >
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:drawingCacheQuality="auto"
+    android:gravity="bottom"
+    android:orientation="vertical" >
+  
+     <Button
+         android:id="@+id/main_register_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/main_register"
+         android:textAppearance="?android:attr/textAppearanceMedium" 
+         android:layout_marginBottom="20dp"
+	     android:layout_marginLeft="20dp"/>
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/dummy_button" />
-        </LinearLayout>
-    </FrameLayout>
+     <Button
+         android:id="@+id/main_forgot_password_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/main_forgotPassword"
+         android:layout_alignParentRight="true"
+         android:textAppearance="?android:attr/textAppearanceMedium"
+         android:layout_marginBottom="20dp"
+	     android:layout_marginRight="20dp" />
+     
+   
+</RelativeLayout>
+<FrameLayout android:layout_height="match_parent" 
+    android:layout_width="match_parent" 
+    android:fitsSystemWindows="true">
+	<LinearLayout 
+    android:background="@color/black_overlay" 
+    android:layout_height="wrap_content" 
+    android:layout_width="match_parent" 
+    android:id="@+id/fullscreen_content_controls" 
+    android:orientation="horizontal" 
+    android:layout_gravity="bottom|center_horizontal" 
+    tools:ignore="UselessParent" 
+    style="?buttonBarStyle">
+
+    </LinearLayout>
+    
+</FrameLayout>
 
 </FrameLayout>

@@ -1,0 +1,106 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context=".Login" >
+    
+	 <RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:gravity="center"
+	    android:drawingCacheQuality="auto"
+    	android:layout_margin="10dp">
+	    
+       	 <TextView
+	         android:id="@+id/register_email_address_text"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="center_horizontal"
+	         android:text="@string/register_emailAddress"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	     <EditText
+	         android:id="@+id/register_email_address_edit_text"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@id/register_email_address_text"
+	         android:inputType="textEmailAddress" />
+	     
+		<TextView
+	         android:id="@+id/register_confirm_email_address_text"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="center_horizontal"
+	         android:layout_below="@id/register_email_address_edit_text"
+	         android:text="@string/register_confirmEmailAddress"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	     <EditText
+	         android:id="@+id/register_confirm_email_address_edit_text"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@id/register_confirm_email_address_text"
+	         android:inputType="textEmailAddress" />
+	     
+	     <TextView
+	         android:id="@+id/register_password_text"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="center_vertical"
+	         android:layout_below="@id/register_confirm_email_address_edit_text"
+	         android:text="@string/register_password"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+	     
+	     <EditText
+	         android:id="@+id/register_password_edit_text"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@id/register_password_text"
+	         android:inputType="textPassword" />
+	     
+	     <TextView
+	         android:id="@+id/register_confirm_password_text"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="center_vertical"
+	         android:layout_below="@id/register_password_edit_text"
+	         android:text="@string/register_confirmPassword"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+	     
+	     <EditText
+	         android:id="@+id/register_confirm_password_edit_text"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@id/register_confirm_password_text"
+	         android:inputType="textPassword" />
+	     
+	     <Button
+           android:text="@string/register_registerButton"
+           android:layout_width="wrap_content" 
+           android:layout_height="wrap_content" 
+           android:layout_below="@id/register_confirm_password_edit_text"
+           android:layout_alignParentRight="true"
+           android:id="@+id/register_register_button"/>
+    </RelativeLayout>
+   	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:drawingCacheQuality="auto"
+	    android:gravity="bottom"
+	    android:orientation="vertical" >
+
+	     <TextView
+	         android:id="@+id/register_back_text"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentBottom="true"
+	         android:layout_alignParentLeft="true"
+	         android:layout_marginBottom="20dp"
+	         android:layout_marginLeft="20dp"
+	         android:text="@string/register_back"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	</RelativeLayout>
+</FrameLayout>
