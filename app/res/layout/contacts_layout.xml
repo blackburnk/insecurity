@@ -1,0 +1,59 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background= "@drawable/insecurity" >
+    
+	<ScrollView 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center">  
+	 	<LinearLayout
+	 	    android:id="@+id/contacts_linear_layout"
+		  	android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+	 	    
+	 	</LinearLayout>
+	 </ScrollView>
+	 <RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:drawingCacheQuality="auto"
+	    android:gravity="bottom"
+	    android:orientation="vertical" >
+
+	     <Button
+	         android:id="@+id/contacts_back_button"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentBottom="true"
+	         android:layout_alignParentLeft="true"
+	         android:layout_marginBottom="20dp"
+	         android:layout_marginLeft="20dp"
+	         android:text="@string/contacts_back"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+	     
+	     <Button
+	         android:id="@+id/contacts_add_contact_button"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentBottom="true"
+	         android:layout_centerHorizontal="true"
+	         android:layout_marginBottom="20dp"
+	         android:layout_marginLeft="20dp"
+	         android:text="@string/contacts_add_contact"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+		<Button
+	         android:id="@+id/contacts_delete_contact_button"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentBottom="true"
+	         android:layout_alignParentRight="true"
+	         android:layout_marginBottom="20dp"
+	         android:layout_marginLeft="20dp"
+	         android:text="@string/contacts_delete_contact"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+	</RelativeLayout>
+</FrameLayout>

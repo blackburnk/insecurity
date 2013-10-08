@@ -1,7 +1,20 @@
 package com.osu.insecurity;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,9 +23,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.osu.insecurity.util.SystemUiHider;
 
 /**
@@ -94,18 +111,19 @@ public class Login extends Activity {
 	private TextView login_registerText;
 	private TextView login_forgotPasswordText;
 	private Button login_loginButton;
+	private CheckBox login_staySignedInCheckBox;
 	
 	/**
 	 * Below are the controls for the register menu
 	 * register_registerButton = register button
-	 * register_backText = back text view
+	 * register_backButton = back text view
 	 * register_emailAddressEditText = email address edit text
 	 * register_confirmEmailAddressEditText = confirm email address edit text
 	 * register_passwordEditText = password edit text
 	 * register_confirmPasswordEditText = confirm password edit text
 	 */
 	private Button register_registerButton;
-	private TextView register_backText;
+	private Button register_backButton;
 	private EditText register_emailAddressEditText;
 	private EditText register_confirmEmailAddressEditText;
 	private EditText register_passwordEditText;
@@ -115,16 +133,63 @@ public class Login extends Activity {
 	 * Below are the controls for the forgot password menu
 	 * forgotPassword_emailAddressEditText = email address edit text
 	 * forgotPassword_sendPassword = send password button
-	 * forgotPassword_backText = back text view
+	 * forgotPassword_backButton = back text view
 	 */
 	private EditText forgotPassword_emailAddressEditText;
 	private Button forgotPassword_sendPassword;
-	private TextView forgotPassword_backText;
+	private Button forgotPassword_backButton;
 	
+	/**
+	 * database is a collection of emails and passwords used as a server to keep track of the 
+	 * users
+	 */
+	private HashMap<String, String> database;
+	
+	/**
+	 * The email to set the login screen from forgotpassword 
+	 */
+	private String forgotEmail;
+	
+	/**
+	 * The email and password that was just registered
+	 */
+	private String registeredEmail;
+	private String registeredPassword;
+	
+	/**
+	 * The saved password and email for the user
+	 */
+	private String savedEmail;
+	private String savedPassword;
+	
+	private boolean forgotPassword;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		login();
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()) ==  ConnectionResult.SUCCESS)
+		{
+			database = new HashMap<String, String>();
+			forgotEmail = "";
+			//loadData("database.txt");
+			try {
+				loadData();
+			} catch (IOException e) {
+				
+			}
+			login();
+		}
+		else
+		{
+			switch (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()))
+			{
+				case ConnectionResult.SERVICE_MISSING: 
+					//GooglePlayServicesUtil.getErrorDialog(ConnectionResult.SERVICE_MISSING, this, );
+				case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED: 
+				case ConnectionResult.SERVICE_DISABLED: 
+			}
+		}
+		
 	}
 
 	@Override
@@ -178,12 +243,30 @@ public class Login extends Activity {
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		final View contentView = findViewById(R.id.fullscreen_content);
-		login_emailAddressEditText = (EditText) findViewById(R.id.main_email_address_edit_text);
-		login_passwordEditText = (EditText) findViewById(R.id.main_password_edit_text);
-		login_registerText = (TextView) findViewById(R.id.main_register_text);
-		login_forgotPasswordText = (TextView) findViewById(R.id.main_forgot_password_text);
-		login_loginButton = (Button) findViewById(R.id.main_login_button);
+		login_emailAddressEditText = (EditText) findViewById(R.id.login_email_address_edit_text);
+		login_passwordEditText = (EditText) findViewById(R.id.login_password_edit_text);
+		login_registerText = (TextView) findViewById(R.id.login_register_button);
+		login_forgotPasswordText = (TextView) findViewById(R.id.login_forgot_password_button);
+		login_loginButton = (Button) findViewById(R.id.login_login_button);
+		login_staySignedInCheckBox = (CheckBox) findViewById(R.id.login_stay_signed_in_check_box);
 		
+		login_emailAddressEditText.setText("c");
+		login_passwordEditText.setText("c");
+		
+		if(forgotPassword)
+		{
+			login_emailAddressEditText.setText(forgotEmail);
+		}
+		else if(savedEmail != null && !savedEmail.equals(""))
+		{
+			login_emailAddressEditText.setText(savedEmail);
+			login_passwordEditText.setText(savedPassword);
+		}
+		else if(registeredEmail != null && !registeredEmail.equals(""))
+		{
+			login_emailAddressEditText.setText(registeredEmail);
+			login_passwordEditText.setText(registeredPassword);
+		}
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
 		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
@@ -253,7 +336,19 @@ public class Login extends Activity {
 			{
 				if(loginSuccessful()) //check to see if the user entered correct email address/password
 				{
+					if(login_staySignedInCheckBox.isChecked())
+					{
+						//save the email and password
+						savedEmail = login_emailAddressEditText.getText().toString();
+						savedPassword = login_passwordEditText.getText().toString();
+					}
+					else
+					{
+						savedEmail = "";
+						savedPassword = "";
+					}
 					//go to the main screen
+					startActivity(new Intent ("com.osu.insecurity.MAIN"));
 				}
 				else
 				{
@@ -288,12 +383,21 @@ public class Login extends Activity {
 	 */
 	private boolean loginSuccessful()
 	{
-		boolean success = true; //TODO change to false when we establish database/server
+		boolean success = false;
 		if(login_emailAddressEditText.getText().toString().length() != 0) //check to see if the user has entered an email address
 		{
 			if(login_passwordEditText.getText().toString().length() != 0 ) //check to see if the user has entered a password
 			{
+				String email = login_emailAddressEditText.getText().toString();
+				String password = login_passwordEditText.getText().toString();
 				//check the email address/password with the data base
+				if(database.containsKey(email))
+				{
+					if(password.equals(database.get(email)))
+					{
+						success = true;
+					}
+				}
 			}
 		}
 		return success;
@@ -322,17 +426,18 @@ public class Login extends Activity {
 								if(register_emailAddressEditText.getText().toString().matches(EMAIL_PATTERN))
 								{
 									//check database for taken email address or register 
-									/*
-									if(!database.contains(register_emailAddressEditText.getText().toString())
+									
+									if(!database.containsKey(register_emailAddressEditText.getText().toString()))
 									{
 										//register the email
 										success = true;
+										database.put(register_emailAddressEditText.getText().toString(), register_passwordEditText.getText().toString());
 									}
 									else
 									{
 										Toast.makeText(getApplicationContext(), REGISTER_TAKEN_EMAIL_ADDRESS, Toast.LENGTH_SHORT).show();
 									}
-									*/
+									
 								}
 								else //have not entered a valid email address
 								{
@@ -379,7 +484,7 @@ public class Login extends Activity {
 		setContentView(R.layout.register_layout);
 		
 		register_registerButton = (Button) findViewById(R.id.register_register_button);
-		register_backText = (TextView) findViewById(R.id.register_back_text);
+		register_backButton = (Button) findViewById(R.id.register_back_button);
 		register_emailAddressEditText = (EditText) findViewById(R.id.register_email_address_edit_text);
 		register_confirmEmailAddressEditText = (EditText) findViewById(R.id.register_confirm_email_address_edit_text);;
 		register_passwordEditText = (EditText) findViewById(R.id.register_password_edit_text);
@@ -394,12 +499,20 @@ public class Login extends Activity {
 				if(registrationSuccessful())
 				{
 					Toast.makeText(getApplicationContext(), REGISTER_REGISTRATION_SUCCESSFUL, Toast.LENGTH_SHORT).show();
+					registeredEmail = register_emailAddressEditText.getText().toString();
+					registeredPassword = register_passwordEditText.getText().toString();
+					register_emailAddressEditText.setText("");
+					register_confirmEmailAddressEditText.setText("");
+					register_passwordEditText.setText("");
+					register_confirmPasswordEditText.setText("");
+					
+					login();
 				}
 			}	
 		});
 		
 		//sets up the interaction when the user clicks the back text
-		register_backText.setOnClickListener(new View.OnClickListener() 
+		register_backButton.setOnClickListener(new View.OnClickListener() 
 		{
 			@Override
 			public void onClick(View v) 
@@ -420,8 +533,15 @@ public class Login extends Activity {
 		
 		if(forgotPassword_emailAddressEditText.getText().toString().matches(EMAIL_PATTERN))
 		{
-			//send the password to that email
-			success = true;
+			if(database.containsKey(forgotPassword_emailAddressEditText.getText().toString()))
+			{
+				//send the password to that email
+				success = true;
+			}
+			else
+			{
+				Toast.makeText(getApplicationContext(), "There is account associated with that email", Toast.LENGTH_SHORT).show();
+			}
 		}
 		else
 		{
@@ -440,7 +560,7 @@ public class Login extends Activity {
 		
 		forgotPassword_emailAddressEditText = (EditText) findViewById(R.id.forgotPassword_email_address_edit_text);
 		forgotPassword_sendPassword = (Button) findViewById(R.id.forgotPassword_send_password_button);
-		forgotPassword_backText = (TextView) findViewById(R.id.forgotPassword_back_text);
+		forgotPassword_backButton = (Button) findViewById(R.id.forgotPassword_back_button);
 		
 		//sets up the interaction when the user clicks the register button
 		forgotPassword_sendPassword.setOnClickListener(new View.OnClickListener() 
@@ -451,12 +571,20 @@ public class Login extends Activity {
 				if(passwordSent())
 				{
 					Toast.makeText(getApplicationContext(), FORGOT_PASSWORD_EMAIL_SENT, Toast.LENGTH_SHORT).show();
+					forgotEmail = forgotPassword_emailAddressEditText.getText().toString();
+					forgotPassword_emailAddressEditText.setText("");
+					forgotPassword = true;
+					login();
+				}
+				else
+				{
+					forgotPassword = false;
 				}
 			}	
 		});
 				
-				//sets up the interaction when the user clicks the back text
-		forgotPassword_backText.setOnClickListener(new View.OnClickListener() 
+		//sets up the interaction when the user clicks the back text
+		forgotPassword_backButton.setOnClickListener(new View.OnClickListener() 
 		{
 			@Override
 			public void onClick(View v) 
@@ -467,6 +595,73 @@ public class Login extends Activity {
 		});
 	}
 	
+	/**
+	 * Loads the data from database.txt in the assets folder
+	 * Loads the email addresses and passwords
+	 */
+	private void loadData() throws IOException
+	{
+		AssetManager assets = getResources().getAssets();
+		DataInputStream in = new DataInputStream(assets.open("database.txt"));// opens file  sent into loadData into the data input stream
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));// creates buffered reader br 
+		String email = "";// initializes name
+		String password = "";//initializes email
+		boolean onEmail = true;
+		while(br.ready())
+		{
+			char c = (char) br.read();// sets c as the character read from the buffered reader
+			if(c == ' ')
+			{
+				onEmail = false;
+			}
+			else if(c == ';') //check to see if end of line
+			{
+				database.put(email, password);
+				email = "";
+				password = "";
+				onEmail = true;
+			}
+			else
+			{
+				if(onEmail) //check to see if we are still getting characters from the email
+				{
+					email = email + c;
+				}
+				else
+				{
+					password = password + c;
+				}
+			}
+		}
+		br.close();//close buffered reader
+		in.close();// close input stream
+	}
+	
+	/**
+	 * Saves the data base
+	 */
+	private void saveDataBase()
+	{
+		try 
+		{
+			File output= new File("database.txt");
+			if (output.canWrite()) 
+			{
+				BufferedWriter out = new BufferedWriter(new FileWriter(output, false));
+			    Iterator<java.util.Map.Entry<String, String>> iter =  database.entrySet().iterator();
+			    while(iter.hasNext()) //iterate over the keys and values and print to the database file
+			    {
+			    	java.util.Map.Entry<String, String> entry = iter.next();
+			    	out.write(entry.getKey() + " " + entry.getValue() + "\n");
+			    }
+			    out.close();
+			}
+		} 
+		catch (IOException e) 
+		{
+		    
+		}
+	}
 	/**
 	 * Creates the options menu and the bottom of the application.
 	 */
@@ -489,6 +684,7 @@ public class Login extends Activity {
  		switch (item.getItemId()){
  		case 1:
  			//exits the application and kills all processes
+ 			saveDataBase();
  			finish();
  			android.os.Process.killProcess(android.os.Process.myPid());
  			return true;

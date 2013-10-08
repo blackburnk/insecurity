@@ -4,12 +4,13 @@
     <string name="app_name">Insecurity</string>
     <string name="dummy_button">Dummy Button</string>
     
-    <string name="main_login">Log In</string>
-    <string name="main_emailAddress">Email Address</string>
-	<string name="main_password">Password</string>
-	<string name="main_register">Register</string>
-	<string name="main_forgotPassword">Forgot Password</string>
-	<string name="main_loginButton">Login</string>
+    <string name="login_login">Log In</string>
+    <string name="login_emailAddress">Email Address</string>
+	<string name="login_password">Password</string>
+	<string name="login_register">Register</string>
+	<string name="login_forgotPassword">Forgot Password</string>
+	<string name="login_loginButton">Login</string>
+	<string name="login_staySignedInCheckBox">Stay Signed In</string>
 	
 	<string name="register_registerButton">Register</string>
 	<string name="register_emailAddress">Email Address</string>
@@ -21,4 +22,13 @@
 	<string name="forgotPassword_emailAddress">Email Address</string>
 	<string name="forgotPassword_sendPasswordButton">Send Password</string>
 	<string name="forgotPassword_back">Back</string>
+	
+	<string name="main_on_off">Turn Off</string>
+	<string name="main_contacts">Contacts</string>
+	
+	<string name="contacts_back">Back</string>
+	<string name="contacts_add_contact">Add</string>
+	<string name="contacts_delete_contact">Delete</string>
+	
+	
 </resources>
