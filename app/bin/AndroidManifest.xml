@@ -27,7 +27,11 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	<uses-permission android:name="com.osu.insecurity.MAPS_RECEIVE"/>
-
+	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-feature android:name="android.hardware.camera" />
+	<uses-feature android:name="android.hardware.camera.autofocus" />
+	
     <application
         android:allowBackup="true"
         android:icon="@drawable/insecurity"
@@ -84,6 +88,7 @@
             <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
      	</activity> 
+     	
      	
     </application>
 	

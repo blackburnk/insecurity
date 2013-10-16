@@ -433,9 +433,10 @@ public class Login extends Activity {
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)  {
-	    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	    	//if the user hits the back button on the keypad, make sure we save the contacts
 	        saveDataBase();
+	        finish();
 	        return true;
 	    }
 
