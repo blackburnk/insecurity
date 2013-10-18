@@ -7,8 +7,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -86,8 +87,8 @@ public class Login extends Activity {
 	 * login_forgotPasswordText = forgot password text view
 	 * login_loginButton = login button
 	 */
-	private EditText login_emailAddressEditText;
-	private EditText login_passwordEditText;
+	private static EditText login_emailAddressEditText;
+	private static  EditText login_passwordEditText;
 	private TextView login_registerText;
 	private TextView login_forgotPasswordText;
 	private Button login_loginButton;
@@ -95,10 +96,11 @@ public class Login extends Activity {
 	
 	
 	/**
-	 * database is a collection of emails and passwords used as a server to keep track of the 
-	 * users
+	 * database is a collection sent over a server to keep track of the 
+	 * users and their personal information
 	 */
-	protected static HashMap<String, String> database;
+	protected static Set<Profile> database;
+	
 	
 	/**
 	 * The email to set the login screen from forgotpassword 
@@ -117,14 +119,18 @@ public class Login extends Activity {
 	private String savedEmail;
 	private String savedPassword;
 	
-	protected static boolean forgotPassword;
+	/**
+	 * Email used to sign in
+	 */
+	protected static Profile currentUserSignedIn;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()) ==  ConnectionResult.SUCCESS)
 		{
-			database = new HashMap<String, String>();
+			database = new HashSet<Profile>();
 			forgotEmail = "";
 			//loadData("database.txt");
 			try {
@@ -205,12 +211,25 @@ public class Login extends Activity {
 		login_loginButton = (Button) findViewById(R.id.login_login_button);
 		login_staySignedInCheckBox = (CheckBox) findViewById(R.id.login_stay_signed_in_check_box);
 		
-		login_emailAddressEditText.setText("c");
-		login_passwordEditText.setText("c");
+		//TODO for testing purposes only 
+		Profile temp = null;
+		Iterator<Profile> iter = database.iterator();
 		
-		if(forgotPassword)
+		while(iter.hasNext())
+		{
+			Profile next = iter.next();
+			if(next.getEmail().equals("buckeye.1@osu.edu"))
+			{
+				temp = next;
+			}
+		}
+		login_emailAddressEditText.setText(temp.getEmail());
+		login_passwordEditText.setText(temp.getPassword());
+		
+		if(forgotEmail.length() > 0)
 		{
 			login_emailAddressEditText.setText(forgotEmail);
+			forgotEmail = "";
 		}
 		else if(savedEmail != null && !savedEmail.equals(""))
 		{
@@ -221,6 +240,8 @@ public class Login extends Activity {
 		{
 			login_emailAddressEditText.setText(registeredEmail);
 			login_passwordEditText.setText(registeredPassword);
+			registeredEmail = "";
+			registeredPassword = "";
 		}
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
@@ -347,12 +368,19 @@ public class Login extends Activity {
 			{
 				String email = login_emailAddressEditText.getText().toString();
 				String password = login_passwordEditText.getText().toString();
-				//check the email address/password with the data base
-				if(database.containsKey(email))
+				
+				Iterator<Profile> iter = database.iterator();
+				
+				while(iter.hasNext())
 				{
-					if(password.equals(database.get(email)))
+					Profile next = iter.next();
+					if(next.getEmail().equals(email)) //check the email address/password with the data base
 					{
-						success = true;
+						if(next.getPassword().equals(password))
+						{
+							success = true;
+							currentUserSignedIn = next;
+						}
 					}
 				}
 			}
@@ -372,32 +400,63 @@ public class Login extends Activity {
 		AssetManager assets = getResources().getAssets();
 		DataInputStream in = new DataInputStream(assets.open("database.txt"));// opens file  sent into loadData into the data input stream
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));// creates buffered reader br 
-		String email = "";// initializes name
-		String password = "";//initializes email
+		String name = ""; 
+		String email = "";
+		String password = "";
+		String distress = "";
+		boolean onName = true;
 		boolean onEmail = true;
+		boolean onPassword = true;
+		boolean onDistress = true;
 		while(br.ready())
 		{
 			char c = (char) br.read();// sets c as the character read from the buffered reader
-			if(c == ' ')
+			if(c == ':')
 			{
-				onEmail = false;
+				if(onName)
+				{
+					onName = false;
+					onEmail = true;
+				}
+				else if(onEmail)
+				{
+					onEmail = false;
+					onPassword = true;
+				}
+				else if(onPassword)
+				{
+					onPassword = false;
+					onDistress = true;
+				}
 			}
 			else if(c == ';') //check to see if end of line
 			{
-				database.put(email, password);
+				Profile newPI = new Profile(name, email, password, distress);
+				database.add(newPI);
+				name = "";
 				email = "";
 				password = "";
-				onEmail = true;
+				distress = "";
+				onDistress = false;
+				onName = true;
 			}
 			else
 			{
-				if(onEmail) //check to see if we are still getting characters from the email
+				if(onName)
+				{
+					name = name + c;
+				}
+				else if(onEmail) //check to see if we are still getting characters from the email
 				{
 					email = email + c;
 				}
-				else
+				else if(onPassword)
 				{
 					password = password + c;
+				}
+				else if(onDistress)
+				{
+					distress = distress + c;
 				}
 			}
 		}
@@ -416,11 +475,12 @@ public class Login extends Activity {
 			if (output.canWrite()) 
 			{
 				BufferedWriter out = new BufferedWriter(new FileWriter(output, false));
-			    Iterator<java.util.Map.Entry<String, String>> iter =  database.entrySet().iterator();
+			    Iterator<Profile> iter =  database.iterator();
 			    while(iter.hasNext()) //iterate over the keys and values and print to the database file
 			    {
-			    	java.util.Map.Entry<String, String> entry = iter.next();
-			    	out.write(entry.getKey() + " " + entry.getValue() + "\n");
+			    	Profile pi = iter.next();
+			    	out.write(pi.getName() + ":" + pi.getEmail() + ":" + pi.getPassword() + ":" + pi.getDistressPassword() + ";");
+			    	out.write("\n");
 			    }
 			    out.close();
 			}
@@ -441,5 +501,24 @@ public class Login extends Activity {
 	    }
 
 	    return super.onKeyDown(keyCode, event);
+	}
+	
+	/**
+	 * Updates the email and password edit text fields
+	 */
+	public static void updateFields()
+	{
+		if(forgotEmail.length() > 0) //see if there were any updates
+		{
+			login_emailAddressEditText.setText(forgotEmail);
+			forgotEmail = ""; //reset
+		}
+		if(registeredEmail.length() > 0) //see if there were any updates
+		{
+			login_emailAddressEditText.setText(registeredEmail);
+			login_emailAddressEditText.setText(registeredPassword);
+			registeredEmail = ""; //reset
+			registeredPassword = ""; //reset
+		}
 	}
 }

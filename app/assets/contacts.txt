@@ -1,1 +1,5 @@
-Cameron Hopkins,6148861066,hopkins@gmail.com;
+Cameron Hopkins:5555555555:buckeye.1@osu.edu;
+Kaythryn Blackburn:5555555555:buckeye.2@osu.edu;
+Jeff Schobelock:5555555555:buckeye.3@osu.edu;
+Nathan Jacobs:5555555555:buckeye.4@osu.edu;
+Andy Shaw:5555555555:buckeye.5@osu.edu;

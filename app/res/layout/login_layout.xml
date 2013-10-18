@@ -37,6 +37,7 @@
          android:layout_gravity="center_vertical"
          android:text="@string/login_emailAddress"
          android:layout_marginRight="10dp"
+         android:textColor="#FFFFFFFF"
          android:textAppearance="?android:attr/textAppearanceMedium" />
 
      <EditText
@@ -44,6 +45,7 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:layout_toRightOf="@id/login_email_address_text"
+         android:textColor="#FFFFFFFF"
          android:inputType="textEmailAddress" />
 
      <TextView
@@ -55,6 +57,7 @@
          android:layout_marginTop="10dp"
          android:layout_marginRight="10dp"
          android:text="@string/login_password"
+         android:textColor="#FFFFFFFF"
          android:textAppearance="?android:attr/textAppearanceMedium" />
      
      <EditText
@@ -64,6 +67,7 @@
          android:layout_toRightOf="@id/login_password_text"
          android:layout_below="@id/login_email_address_text"
          android:layout_marginTop="10dp"
+         android:textColor="#FFFFFFFF"
          android:inputType="textPassword" />
      
       <CheckBox
@@ -72,6 +76,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_below="@id/login_password_edit_text"
 	    android:layout_alignParentRight="true"
+	    android:textColor="#FFFFFFFF"
 	    android:text="@string/login_staySignedInCheckBox" />
       
       <Button
@@ -82,6 +87,7 @@
            android:layout_centerHorizontal="true"
            android:layout_alignParentRight="true"
            android:layout_alignParentLeft="true"
+           android:textColor="#FFFFFFFF"
            android:id="@+id/login_login_button" />
       
       
@@ -99,6 +105,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:text="@string/login_register"
+         android:textColor="#FFFFFFFF"
          android:textAppearance="?android:attr/textAppearanceMedium" 
          android:layout_marginBottom="20dp"
 	     android:layout_marginLeft="20dp"/>
@@ -109,6 +116,7 @@
          android:layout_height="wrap_content"
          android:text="@string/login_forgotPassword"
          android:layout_alignParentRight="true"
+         android:textColor="#FFFFFFFF"
          android:textAppearance="?android:attr/textAppearanceMedium"
          android:layout_marginBottom="20dp"
 	     android:layout_marginRight="20dp" />    

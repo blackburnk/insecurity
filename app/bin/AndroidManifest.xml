@@ -81,7 +81,16 @@
      	</activity>
      	
         <activity 
-	    android:name=".Contacts"
+	    android:name=".ViewProfile"
+        android:label="@string/app_name" >
+        <intent-filter>
+            <action android:name="com.osu.insecurity.PROFILE" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+     	</activity> 
+     	
+        <activity 
+	    android:name=".ViewContacts"
         android:label="@string/app_name" >
         <intent-filter>
             <action android:name="com.osu.insecurity.CONTACTS" />

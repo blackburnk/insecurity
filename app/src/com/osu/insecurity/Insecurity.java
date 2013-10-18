@@ -37,8 +37,8 @@ implements OnMapClickListener{
 	 * main_onOrOffCheckBox = on or off check box
 	 * main_contactsButton = contacts button
 	 */
-	private CheckBox main_onOrOffCheckBox;
-	private Button main_contactsButton;
+	private CheckBox insecurity_onOrOffCheckBox;
+	private Button insecurity_profileButton;
 	private GoogleMap mMap;
 	
 	private Bundle savedInstanceState;
@@ -59,19 +59,19 @@ implements OnMapClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		this.savedInstanceState = savedInstanceState;		
-		main();
+		insecurity();
 	}
 	 
 	/**
 	 * Set up the main screen
 	 */
-	private void main()
+	private void insecurity()
 	{
 		
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		setContentView(R.layout.main_layout);
+		setContentView(R.layout.insecurity_layout);
 		
 		// Try to obtain the map from the SupportMapFragment.
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
@@ -109,37 +109,37 @@ implements OnMapClickListener{
 	    			17));
         }
         
-		main_onOrOffCheckBox = (CheckBox)findViewById(R.id.main_on_off_checkBox);
-		main_contactsButton = (Button)findViewById(R.id.main_contacts_button);
-		main_onOrOffCheckBox.setChecked(true);
+		insecurity_onOrOffCheckBox = (CheckBox)findViewById(R.id.insecurity_on_off_checkBox);
+		insecurity_profileButton = (Button)findViewById(R.id.insecurity_profile_button);
+		insecurity_onOrOffCheckBox.setChecked(true);
 		
 		//sets up the interaction when the user clicks the on or off check box
-		main_onOrOffCheckBox.setOnClickListener(new View.OnClickListener() 
+		insecurity_onOrOffCheckBox.setOnClickListener(new View.OnClickListener() 
 		{
 			@Override
 			public void onClick(View v) 
 			{
-				if(main_onOrOffCheckBox.isChecked())
+				if(insecurity_onOrOffCheckBox.isChecked())
 				{
-					main_onOrOffCheckBox.setText("Turn Off");
+					insecurity_onOrOffCheckBox.setText("Turn Off");
 					//main_onOrOffCheckBox.setChecked(false);
 				}
 				else
 				{
-					main_onOrOffCheckBox.setText("Turn On");
+					insecurity_onOrOffCheckBox.setText("Turn On");
 					//main_onOrOffCheckBox.setChecked(true);
 				}
 			}
 		});
 		
 		//sets up the interaction when the user clicks the contacts button
-		main_contactsButton.setOnClickListener(new View.OnClickListener() 
+		insecurity_profileButton.setOnClickListener(new View.OnClickListener() 
   		{
   			@Override
   			public void onClick(View v) 
   			{
   				//go to the contacts screen
-				startActivity(new Intent ("com.osu.insecurity.CONTACTS"));
+				startActivity(new Intent ("com.osu.insecurity.PROFILE"));
   			}
   		});
 		
