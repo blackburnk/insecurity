@@ -28,8 +28,8 @@
 	         android:layout_width="match_parent"
 	         android:layout_height="wrap_content"
 	         android:layout_below="@id/register_name_text"
-	         android:textColor="#FFFFFFFF"
-	         android:inputType="textEmailAddress" />
+	         android:inputType="textPersonName"
+	         android:textColor="#FFFFFFFF" />
 	     
 	     <TextView
 	         android:id="@+id/register_email_address_text"
