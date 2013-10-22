@@ -13,6 +13,7 @@
 	<string name="login_staySignedInCheckBox">Stay Signed In</string>
 	
 	<string name="register_registerButton">Register</string>
+	<string name="register_name">Name</string>
 	<string name="register_emailAddress">Email Address</string>
 	<string name="register_confirmEmailAddress">Confirm Email Address</string>
 	<string name="register_password">Password</string>
@@ -23,12 +24,30 @@
 	<string name="forgotPassword_sendPasswordButton">Send Password</string>
 	<string name="forgotPassword_back">Back</string>
 	
-	<string name="main_on_off">Turn Off</string>
-	<string name="main_contacts">Contacts</string>
+	<string name="insecurity_on_off">Turn Off</string>
+	<string name="insecurity_profile">Profile</string>
+	
+	<string name="profile_greetingBeginning">"Hi "</string>
+	<string name="profile_name">Name</string>
+	<string name="profile_changePassword">Change Password</string>
+	<string name="profile_changeDistress">Change Distress</string>
+	<string name="profile_addDeleteContact">Add/Delete Contact</string>
+	<string name="profile_save">Save</string>
+	<string name="profile_back">Back</string>
 	
 	<string name="contacts_back">Back</string>
 	<string name="contacts_add_contact">Add</string>
 	<string name="contacts_delete_contact">Delete</string>
 	
+	<string name="alertDialogChangePassword_oldPassword">Old Password</string>
+	<string name="alertDialogChangePassword_newPassword">New Password</string>
+	<string name="alertDialogChangePassword_confirmNewPassword">Confirm New Password</string>
 	
+	<string name="alertDialogChangeDistress_oldDistress">Old Distress</string>
+	<string name="alertDialogChangeDistress_newDistress">New Distress</string>
+	<string name="alertDialogChangeDistress_confirmNewDistress">Confirm New Distress</string>
+	
+	<string name="alertDialogAddContact_name">Name</string>
+	<string name="alertDialogAddContact_phoneNumber">Phone Number</string>
+	<string name="alertDialogAddContact_email">Email Address</string>
 </resources>

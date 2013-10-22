@@ -1,1 +1,5 @@
-c c;
+Cameron:buckeye.1@osu.edu:password:distress;
+Kathryn:buckeye.2@osu.edu:password:distress;
+Nathan:buckeye.3@osu.edu:password:distress;
+Andy:buckeye.4@osu.edu:password:distress;
+Jeff:buckeye.5@osu.edu:password:distress;

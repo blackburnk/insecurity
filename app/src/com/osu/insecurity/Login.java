@@ -7,8 +7,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -18,8 +19,7 @@ import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -72,30 +72,11 @@ public class Login extends Activity {
 	 */
 	private static final String LOGIN_INCORRECT = "Incorrect email address/password";
 	
-	/**
-	 * The email address already taken Toast string
-	 */
-	private static final String REGISTER_TAKEN_EMAIL_ADDRESS = "This email address is already taken";
-	
-	/**
-	 * The successful registration Toast string
-	 */
-	private static final String REGISTER_REGISTRATION_SUCCESSFUL = "Registration successful";
-	
-	/**
-	 * The invalid registration Toast string
-	 */
-	private static final String REGISTER_REGISTRATION_INVALID = "Invalid registration/email";
-	
-	/**
-	 * The successful password sent Toast string
-	 */
-	private static final String FORGOT_PASSWORD_EMAIL_SENT = "Password sent to email";
 	
 	/**
 	 * Regular Expression Email Pattern
 	 */
-	private static final String EMAIL_PATTERN = 
+	protected static final String EMAIL_PATTERN = 
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	/**
@@ -106,55 +87,31 @@ public class Login extends Activity {
 	 * login_forgotPasswordText = forgot password text view
 	 * login_loginButton = login button
 	 */
-	private EditText login_emailAddressEditText;
-	private EditText login_passwordEditText;
+	private static EditText login_emailAddressEditText;
+	private static  EditText login_passwordEditText;
 	private TextView login_registerText;
 	private TextView login_forgotPasswordText;
 	private Button login_loginButton;
 	private CheckBox login_staySignedInCheckBox;
 	
-	/**
-	 * Below are the controls for the register menu
-	 * register_registerButton = register button
-	 * register_backButton = back text view
-	 * register_emailAddressEditText = email address edit text
-	 * register_confirmEmailAddressEditText = confirm email address edit text
-	 * register_passwordEditText = password edit text
-	 * register_confirmPasswordEditText = confirm password edit text
-	 */
-	private Button register_registerButton;
-	private Button register_backButton;
-	private EditText register_emailAddressEditText;
-	private EditText register_confirmEmailAddressEditText;
-	private EditText register_passwordEditText;
-	private EditText register_confirmPasswordEditText;
 	
 	/**
-	 * Below are the controls for the forgot password menu
-	 * forgotPassword_emailAddressEditText = email address edit text
-	 * forgotPassword_sendPassword = send password button
-	 * forgotPassword_backButton = back text view
+	 * database is a collection sent over a server to keep track of the 
+	 * users and their personal information
 	 */
-	private EditText forgotPassword_emailAddressEditText;
-	private Button forgotPassword_sendPassword;
-	private Button forgotPassword_backButton;
+	protected static Set<Profile> database;
+	
 	
 	/**
-	 * database is a collection of emails and passwords used as a server to keep track of the 
-	 * users
+	 * The email to set the login screen from forgot password 
 	 */
-	private HashMap<String, String> database;
-	
-	/**
-	 * The email to set the login screen from forgotpassword 
-	 */
-	private String forgotEmail;
+	protected static String forgotEmail;
 	
 	/**
 	 * The email and password that was just registered
 	 */
-	private String registeredEmail;
-	private String registeredPassword;
+	protected static String registeredEmail;
+	protected static String registeredPassword;
 	
 	/**
 	 * The saved password and email for the user
@@ -162,14 +119,18 @@ public class Login extends Activity {
 	private String savedEmail;
 	private String savedPassword;
 	
-	private boolean forgotPassword;
+	/**
+	 * Email used to sign in
+	 */
+	protected static Profile currentUserSignedIn;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()) ==  ConnectionResult.SUCCESS)
 		{
-			database = new HashMap<String, String>();
+			database = new HashSet<Profile>();
 			forgotEmail = "";
 			//loadData("database.txt");
 			try {
@@ -250,22 +211,37 @@ public class Login extends Activity {
 		login_loginButton = (Button) findViewById(R.id.login_login_button);
 		login_staySignedInCheckBox = (CheckBox) findViewById(R.id.login_stay_signed_in_check_box);
 		
-		login_emailAddressEditText.setText("c");
-		login_passwordEditText.setText("c");
+		//TODO for testing purposes only 
+		Profile temp = null;
+		Iterator<Profile> iter = database.iterator();
 		
-		if(forgotPassword)
+		while(iter.hasNext())
+		{
+			Profile next = iter.next();
+			if(next.getEmail().equals("buckeye.1@osu.edu"))
+			{
+				temp = next;
+			}
+		}
+		login_emailAddressEditText.setText(temp.getEmail());
+		login_passwordEditText.setText(temp.getPassword());
+		
+		if(forgotEmail.length() > 0) //check to see if the user has forgotten their password and sent an email
 		{
 			login_emailAddressEditText.setText(forgotEmail);
+			forgotEmail = "";
 		}
-		else if(savedEmail != null && !savedEmail.equals(""))
+		else if(savedEmail != null && !savedEmail.equals("")) //see if the user has saved their email and password from last login
 		{
 			login_emailAddressEditText.setText(savedEmail);
 			login_passwordEditText.setText(savedPassword);
 		}
-		else if(registeredEmail != null && !registeredEmail.equals(""))
+		else if(registeredEmail != null && !registeredEmail.equals("")) //see if the user just registered 
 		{
 			login_emailAddressEditText.setText(registeredEmail);
 			login_passwordEditText.setText(registeredPassword);
+			registeredEmail = "";
+			registeredPassword = "";
 		}
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
@@ -363,7 +339,8 @@ public class Login extends Activity {
 			@Override
 			public void onClick(View v) 
 			{
-				register();
+				//go to the register screen
+				startActivity(new Intent ("com.osu.insecurity.REGISTER"));
 			}	
 		});
 		
@@ -373,7 +350,8 @@ public class Login extends Activity {
 			@Override
 			public void onClick(View v) 
 			{
-				forgotPassword();
+				//go to the contacts screen
+				startActivity(new Intent ("com.osu.insecurity.FORGOTPASSWORD"));
 			}	
 		});
 	}
@@ -390,210 +368,28 @@ public class Login extends Activity {
 			{
 				String email = login_emailAddressEditText.getText().toString();
 				String password = login_passwordEditText.getText().toString();
-				//check the email address/password with the data base
-				if(database.containsKey(email))
-				{
-					if(password.equals(database.get(email)))
-					{
-						success = true;
-					}
-				}
-			}
-		}
-		return success;
-	}
-	
-	/**
-	 * 
-	 * @return true if the registration is successful, otherwise return false
-	 */
-	private boolean registrationSuccessful()
-	{
-		boolean success = false;
 				
-		if(register_emailAddressEditText.getText().toString().length() != 0) //check to see if the user has entered an email address
-		{
-			if(register_confirmEmailAddressEditText.getText().toString().length() != 0 ) //check to see if the user has entered a confirmed email
-			{
-				if(register_passwordEditText.getText().toString().length() != 0) //check to see if the user has entered a password
+				Iterator<Profile> iter = database.iterator();
+				
+				while(iter.hasNext())
 				{
-					if(register_confirmPasswordEditText.getText().toString().length() != 0 ) //check to see if the user has entered a confirmed password
+					Profile next = iter.next();
+					if(next.getEmail().equals(email)) //check the email address/password with the data base
 					{
-						if(register_emailAddressEditText.getText().toString().equals(register_confirmEmailAddressEditText.getText().toString()))
+						if(next.getPassword().equals(password))
 						{
-							if(register_passwordEditText.getText().toString().equals(register_confirmPasswordEditText.getText().toString()))
-							{
-								if(register_emailAddressEditText.getText().toString().matches(EMAIL_PATTERN))
-								{
-									//check database for taken email address or register 
-									
-									if(!database.containsKey(register_emailAddressEditText.getText().toString()))
-									{
-										//register the email
-										success = true;
-										database.put(register_emailAddressEditText.getText().toString(), register_passwordEditText.getText().toString());
-									}
-									else
-									{
-										Toast.makeText(getApplicationContext(), REGISTER_TAKEN_EMAIL_ADDRESS, Toast.LENGTH_SHORT).show();
-									}
-									
-								}
-								else //have not entered a valid email address
-								{
-									Toast.makeText(getApplicationContext(), REGISTER_REGISTRATION_INVALID, Toast.LENGTH_SHORT).show();
-								}
-							}
-							else //passwords do not match
-							{
-								Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
-							}
-						}
-						else //email addresses do not match
-						{
-							Toast.makeText(getApplicationContext(), "Email addresses do not match", Toast.LENGTH_SHORT).show();
+							success = true;
+							currentUserSignedIn = next;
 						}
 					}
-					else //didn't enter a confirmed password
-					{
-						Toast.makeText(getApplicationContext(), "Please enter password", Toast.LENGTH_SHORT).show();
-					}
-				}
-				else //didn't enter a password
-				{
-					Toast.makeText(getApplicationContext(), "Please enter password", Toast.LENGTH_SHORT).show();
 				}
 			}
-			else //didn't enter a confirmed email
-			{
-				Toast.makeText(getApplicationContext(), "Please enter an email address", Toast.LENGTH_SHORT).show();
-			}
-		}
-		else //didn't enter an email
-		{
-			Toast.makeText(getApplicationContext(), "Please enter an email address", Toast.LENGTH_SHORT).show();
 		}
 		return success;
 	}
 	
-	/**
-	 * Changes the screen to the register registration page
-	 */
-	private void register()
-	{
-		setContentView(R.layout.register_layout);
-		
-		register_registerButton = (Button) findViewById(R.id.register_register_button);
-		register_backButton = (Button) findViewById(R.id.register_back_button);
-		register_emailAddressEditText = (EditText) findViewById(R.id.register_email_address_edit_text);
-		register_confirmEmailAddressEditText = (EditText) findViewById(R.id.register_confirm_email_address_edit_text);;
-		register_passwordEditText = (EditText) findViewById(R.id.register_password_edit_text);
-		register_confirmPasswordEditText = (EditText) findViewById(R.id.register_confirm_password_edit_text);
-		
-		//sets up the interaction when the user clicks the register button
-		register_registerButton.setOnClickListener(new View.OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				if(registrationSuccessful())
-				{
-					Toast.makeText(getApplicationContext(), REGISTER_REGISTRATION_SUCCESSFUL, Toast.LENGTH_SHORT).show();
-					registeredEmail = register_emailAddressEditText.getText().toString();
-					registeredPassword = register_passwordEditText.getText().toString();
-					register_emailAddressEditText.setText("");
-					register_confirmEmailAddressEditText.setText("");
-					register_passwordEditText.setText("");
-					register_confirmPasswordEditText.setText("");
-					
-					login();
-				}
-			}	
-		});
-		
-		//sets up the interaction when the user clicks the back text
-		register_backButton.setOnClickListener(new View.OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				//go back to the login menu
-				login();
-			}	
-		});
-	}
 	
-	/**
-	 * 
-	 * @return true if the password was sent, otherwise return false
-	 */
-	private boolean passwordSent()
-	{
-		boolean success = false;
-		
-		if(forgotPassword_emailAddressEditText.getText().toString().matches(EMAIL_PATTERN))
-		{
-			if(database.containsKey(forgotPassword_emailAddressEditText.getText().toString()))
-			{
-				//send the password to that email
-				success = true;
-			}
-			else
-			{
-				Toast.makeText(getApplicationContext(), "There is account associated with that email", Toast.LENGTH_SHORT).show();
-			}
-		}
-		else
-		{
-			Toast.makeText(getApplicationContext(), REGISTER_REGISTRATION_INVALID, Toast.LENGTH_SHORT).show();
-		}
-
-		return success;
-	}
 	
-	/**
-	 * Changes the screen to the forgot password screen
-	 */
-	private void forgotPassword()
-	{
-		setContentView(R.layout.forgot_password_layout);
-		
-		forgotPassword_emailAddressEditText = (EditText) findViewById(R.id.forgotPassword_email_address_edit_text);
-		forgotPassword_sendPassword = (Button) findViewById(R.id.forgotPassword_send_password_button);
-		forgotPassword_backButton = (Button) findViewById(R.id.forgotPassword_back_button);
-		
-		//sets up the interaction when the user clicks the register button
-		forgotPassword_sendPassword.setOnClickListener(new View.OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				if(passwordSent())
-				{
-					Toast.makeText(getApplicationContext(), FORGOT_PASSWORD_EMAIL_SENT, Toast.LENGTH_SHORT).show();
-					forgotEmail = forgotPassword_emailAddressEditText.getText().toString();
-					forgotPassword_emailAddressEditText.setText("");
-					forgotPassword = true;
-					login();
-				}
-				else
-				{
-					forgotPassword = false;
-				}
-			}	
-		});
-				
-		//sets up the interaction when the user clicks the back text
-		forgotPassword_backButton.setOnClickListener(new View.OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) 
-			{
-				//go back to the login menu
-				login();
-			}	
-		});
-	}
 	
 	/**
 	 * Loads the data from database.txt in the assets folder
@@ -604,32 +400,63 @@ public class Login extends Activity {
 		AssetManager assets = getResources().getAssets();
 		DataInputStream in = new DataInputStream(assets.open("database.txt"));// opens file  sent into loadData into the data input stream
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));// creates buffered reader br 
-		String email = "";// initializes name
-		String password = "";//initializes email
+		String name = ""; 
+		String email = "";
+		String password = "";
+		String distress = "";
+		boolean onName = true;
 		boolean onEmail = true;
+		boolean onPassword = true;
+		boolean onDistress = true;
 		while(br.ready())
 		{
 			char c = (char) br.read();// sets c as the character read from the buffered reader
-			if(c == ' ')
+			if(c == ':')
 			{
-				onEmail = false;
+				if(onName)
+				{
+					onName = false;
+					onEmail = true;
+				}
+				else if(onEmail)
+				{
+					onEmail = false;
+					onPassword = true;
+				}
+				else if(onPassword)
+				{
+					onPassword = false;
+					onDistress = true;
+				}
 			}
 			else if(c == ';') //check to see if end of line
 			{
-				database.put(email, password);
+				Profile newPI = new Profile(name, email, password, distress);
+				database.add(newPI);
+				name = "";
 				email = "";
 				password = "";
-				onEmail = true;
+				distress = "";
+				onDistress = false;
+				onName = true;
 			}
 			else
 			{
-				if(onEmail) //check to see if we are still getting characters from the email
+				if(onName)
+				{
+					name = name + c;
+				}
+				else if(onEmail) //check to see if we are still getting characters from the email
 				{
 					email = email + c;
 				}
-				else
+				else if(onPassword)
 				{
 					password = password + c;
+				}
+				else if(onDistress)
+				{
+					distress = distress + c;
 				}
 			}
 		}
@@ -648,11 +475,12 @@ public class Login extends Activity {
 			if (output.canWrite()) 
 			{
 				BufferedWriter out = new BufferedWriter(new FileWriter(output, false));
-			    Iterator<java.util.Map.Entry<String, String>> iter =  database.entrySet().iterator();
+			    Iterator<Profile> iter =  database.iterator();
 			    while(iter.hasNext()) //iterate over the keys and values and print to the database file
 			    {
-			    	java.util.Map.Entry<String, String> entry = iter.next();
-			    	out.write(entry.getKey() + " " + entry.getValue() + "\n");
+			    	Profile pi = iter.next();
+			    	out.write(pi.getName() + ":" + pi.getEmail() + ":" + pi.getPassword() + ":" + pi.getDistressPassword() + ";");
+			    	out.write("\n");
 			    }
 			    out.close();
 			}
@@ -662,34 +490,35 @@ public class Login extends Activity {
 		    
 		}
 	}
-	/**
-	 * Creates the options menu and the bottom of the application.
-	 */
-	public boolean onCreateOptionsMenu(Menu menu)
- 	{
- 		super.onCreateOptionsMenu(menu);
- 		//add an option to the menu and sets the properties
- 		menu.add( 0,1, 1, "Exit Insecurity" )
-        .setShortcut('1', 'e')
-        .setIcon(android.R.drawable.ic_menu_close_clear_cancel);
- 		return true;
- 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	//if the user hits the back button on the keypad, make sure we save the contacts
+	        saveDataBase();
+	        finish();
+	        return true;
+	    }
+
+	    return super.onKeyDown(keyCode, event);
+	}
 	
 	/**
-	 * Handles the events when the options menu is selected and when the options on the menu are selected
+	 * Updates the email and password edit text fields
 	 */
- 	public boolean onOptionsItemSelected(MenuItem item)
- 	{
- 		super.onOptionsItemSelected(item);
- 		switch (item.getItemId()){
- 		case 1:
- 			//exits the application and kills all processes
- 			saveDataBase();
- 			finish();
- 			android.os.Process.killProcess(android.os.Process.myPid());
- 			return true;
-
- 		}
- 		return super.onOptionsItemSelected(item);
- 	}
+	public static void updateFields()
+	{
+		if(forgotEmail.length() > 0) //see if there were any updates
+		{
+			login_emailAddressEditText.setText(forgotEmail);
+			forgotEmail = ""; //reset
+		}
+		if(registeredEmail.length() > 0) //see if there were any updates
+		{
+			login_emailAddressEditText.setText(registeredEmail);
+			login_emailAddressEditText.setText(registeredPassword);
+			registeredEmail = ""; //reset
+			registeredPassword = ""; //reset
+		}
+	}
 }

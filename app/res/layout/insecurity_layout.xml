@@ -33,21 +33,21 @@
 		/> 
    
 	     <CheckBox
-	         android:id="@+id/main_on_off_checkBox"
+	         android:id="@+id/insecurity_on_off_checkBox"
 	         android:layout_width="wrap_content"
 	         android:layout_height="wrap_content"
 	         android:layout_alignParentTop="true"
 	         android:layout_alignParentLeft="true"
-	         android:text="@string/main_on_off"
+	         android:text="@string/insecurity_on_off"
 	         android:textAppearance="?android:attr/textAppearanceMedium" />
 	     
 	     <Button
-	         android:id="@+id/main_contacts_button"
+	         android:id="@+id/insecurity_profile_button"
 	         android:layout_width="wrap_content"
 	         android:layout_height="wrap_content"
 	         android:layout_alignParentTop="true"
 	         android:layout_alignParentRight="true"
-	         android:text="@string/main_contacts"
+	         android:text="@string/insecurity_profile"
 	         android:textAppearance="?android:attr/textAppearanceMedium" />
 		
 </RelativeLayout>
