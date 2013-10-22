@@ -47,7 +47,7 @@
 	<string name="alertDialogChangeDistress_newDistress">New Distress</string>
 	<string name="alertDialogChangeDistress_confirmNewDistress">Confirm New Distress</string>
 	
-	<string name="alertDialogAddContact_name">Old Distress</string>
-	<string name="alertDialogAddContact_phoneNumber">New Distress</string>
-	<string name="alertDialogAddContact_email">Confirm New Distress</string>
+	<string name="alertDialogAddContact_name">Name</string>
+	<string name="alertDialogAddContact_phoneNumber">Phone Number</string>
+	<string name="alertDialogAddContact_email">Email Address</string>
 </resources>

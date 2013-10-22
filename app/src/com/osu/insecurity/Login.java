@@ -103,7 +103,7 @@ public class Login extends Activity {
 	
 	
 	/**
-	 * The email to set the login screen from forgotpassword 
+	 * The email to set the login screen from forgot password 
 	 */
 	protected static String forgotEmail;
 	
@@ -226,17 +226,17 @@ public class Login extends Activity {
 		login_emailAddressEditText.setText(temp.getEmail());
 		login_passwordEditText.setText(temp.getPassword());
 		
-		if(forgotEmail.length() > 0)
+		if(forgotEmail.length() > 0) //check to see if the user has forgotten their password and sent an email
 		{
 			login_emailAddressEditText.setText(forgotEmail);
 			forgotEmail = "";
 		}
-		else if(savedEmail != null && !savedEmail.equals(""))
+		else if(savedEmail != null && !savedEmail.equals("")) //see if the user has saved their email and password from last login
 		{
 			login_emailAddressEditText.setText(savedEmail);
 			login_passwordEditText.setText(savedPassword);
 		}
-		else if(registeredEmail != null && !registeredEmail.equals(""))
+		else if(registeredEmail != null && !registeredEmail.equals("")) //see if the user just registered 
 		{
 			login_emailAddressEditText.setText(registeredEmail);
 			login_passwordEditText.setText(registeredPassword);
