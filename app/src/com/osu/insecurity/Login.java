@@ -132,6 +132,7 @@ public class Login extends Activity {
 		{
 			database = new HashSet<Profile>();
 			forgotEmail = "";
+			registeredEmail = "";
 			//loadData("database.txt");
 			try {
 				loadData();
@@ -218,7 +219,7 @@ public class Login extends Activity {
 		while(iter.hasNext())
 		{
 			Profile next = iter.next();
-			if(next.getEmail().equals("buckeye.1@osu.edu"))
+			if(next.getEmail().equals("hopkinscameron@gmail.com")) //TODO change back to buckeye.1@osu.edu and in the database file
 			{
 				temp = next;
 			}
@@ -508,12 +509,12 @@ public class Login extends Activity {
 	 */
 	public static void updateFields()
 	{
-		if(forgotEmail.length() > 0) //see if there were any updates
+		if(forgotEmail != null && forgotEmail.length() > 0) //see if there were any updates
 		{
 			login_emailAddressEditText.setText(forgotEmail);
 			forgotEmail = ""; //reset
 		}
-		if(registeredEmail.length() > 0) //see if there were any updates
+		if(registeredEmail != null && registeredEmail.length() > 0) //see if there were any updates
 		{
 			login_emailAddressEditText.setText(registeredEmail);
 			login_emailAddressEditText.setText(registeredPassword);

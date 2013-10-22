@@ -49,6 +49,24 @@
 	         android:layout_alignParentRight="true"
 	         android:text="@string/insecurity_profile"
 	         android:textAppearance="?android:attr/textAppearanceMedium" />
-		
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:drawingCacheQuality="auto"
+	    android:gravity="bottom"
+	    android:orientation="vertical" > 
+	     
+	     <TextView
+           android:text="TIME"
+           android:layout_width="wrap_content" 
+           android:layout_height="wrap_content" 
+           android:layout_alignParentBottom="true"
+           android:layout_alignParentLeft="true"
+           android:layout_marginBottom="20dp"
+	       android:layout_marginLeft="20dp"
+	       android:textColor="#FF000000"
+           android:id="@+id/insecurity_time_text"/>
+
+	</RelativeLayout>	
 </RelativeLayout>
   
