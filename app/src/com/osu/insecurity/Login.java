@@ -9,16 +9,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +37,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.osu.insecurity.util.SystemUiHider;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -130,6 +137,56 @@ public class Login extends Activity {
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()) ==  ConnectionResult.SUCCESS)
 		{
+
+	    	/* Set this.dh to the instantiated db controller */
+			// From Kathy just throwing this here for now
+			//TODO
+			//this.dh = new DatabaseHelper(this);
+			
+			/* Construct parameters to check login 
+			String username = this.login_emailAddressEditText.getText().toString();
+			String password = this.login_passwordEditText.getText().toString();
+			String[] parameters = new String[2];
+			parameters[0] = username;
+			parameters[1] = password;
+
+			String query = "SELECT * FROM CUSTOMER WHERE CUSTOMER.Customer_ID = ? AND CUSTOMER.Password = ?";
+
+			Log.d("UsernameChecker", parameters[0]);
+			Log.d("UsernameChecker", parameters[1]);
+			Log.d("UsernameChecker", query);
+			List<String> names = this.dh.selectAll(query, parameters);
+
+			System.out.println(names.size());
+			System.out.println(names.toString());
+
+			if (names.size() > 0) { // Login successful
+				// Save username as the name of the player
+				SharedPreferences settings = PreferenceManager
+						.getDefaultSharedPreferences(this);
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString(OPT_NAME, username);
+				editor.commit();
+				User.LogInUser(this.userNameEditableField.getText().toString());
+
+				Intent userProfile = new Intent(this, UserProfile.class);
+				userProfile.putExtra(UserProfile.USERNAME, User.getInstance()
+						.getUsername());
+				startActivity(userProfile);
+			} else {
+				// Try again?
+				new AlertDialog.Builder(this)
+						.setTitle("Error")
+						.setMessage("Login failed")
+						.setNeutralButton("Try Again",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+									}
+								}).show();
+			}
+			*/
+			
 			database = new HashSet<Profile>();
 			forgotEmail = "";
 			registeredEmail = "";
