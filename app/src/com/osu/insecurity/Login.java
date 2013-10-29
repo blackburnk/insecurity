@@ -140,7 +140,8 @@ public class Login extends Activity {
 
 	    	/* Set this.dh to the instantiated db controller */
 			// From Kathy just throwing this here for now
-			//TODO
+			
+			//TODO this goes in the method to checkLogin after button click login
 			//this.dh = new DatabaseHelper(this);
 			
 			/* Construct parameters to check login 

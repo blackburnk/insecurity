@@ -7,13 +7,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.graphics.Color;
@@ -24,11 +28,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ViewContacts extends Activity {
 	
@@ -51,12 +59,33 @@ public class ViewContacts extends Activity {
 	 * The linear layout view of the Contacts
 	 */
 	private LinearLayout viewContactsLinearLayout;
+	/**
+	 * A string object used in caller undles to pass the product description.
+	 */
+	private static final String PHONE = "phone";
+	/**
+	 * A String object used in caller bundles to pass the product title.
+	 */
+	private static final String FIELD_NAME = "fieldName";
+	/**
+	 * A String object used in caller bundles to pass the product owner
+	 */
+	private static final String EMAIL = "email"; 
 	
 	/**
 	 * The database of Contacts
 	 */
 	private Set<Contact> contacts;
-	
+	/**
+	 * Instantiation of the database controller. 
+	 */
+	private DatabaseHelper dh;
+
+	/**
+	 * ArrayList myData stores the data from the queries so that
+	 * each ListView object can instantiate a unique product.
+	 */
+	private static ArrayList<HashMap<String, String>> storedContactData;
 	/**
 	 * Below are the fields for the Toast's when the user enters incorrect information when 
 	 * attempting to add a contact
@@ -92,6 +121,64 @@ public class ViewContacts extends Activity {
 	 */
 	private void viewContacts()
 	{
+		/*
+		 *   this.dh = new DatabaseHelper(this);
+		 *   
+	    
+	    // query 25
+        String query = "SELECT ContactName, Phone, Email FROM CONTACTS LIMIT 25";
+        List<String> names = this.dh.selectAll(query, null);
+        storedContactData = new ArrayList<HashMap<String,String>>();
+    
+        // populates the storedProductData map 
+        int i = 0;
+        while (names.size() > 3 * i) {
+            HashMap<String, String> map = new HashMap<String, String>();
+            
+            map.put(FIELD_NAME, names.get(3 * i));
+            map.put(PHONE, names.get(3 * i + 1));
+            map.put(EMAIL, names.get(3 * i + 2));
+            
+            storedContactData.add(map);
+            i++;
+        }
+
+        // populates the list view 
+        ListView listView = (ListView) findViewById(R.id.mylist);
+        String[] fieldList = new String[] { FIELD_NAME };
+        SimpleAdapter adapter = new SimpleAdapter(this, storedContactData,
+                android.R.layout.simple_list_item_1, fieldList,
+                new int[] { android.R.id.text1 });
+        listView.setAdapter(adapter);
+
+        // adds the onItemClickListener to all items 
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id) {
+                
+                Intent product = new Intent(view.getContext(), Contact.class);
+                
+                // grab contactName 
+                TextView tv = (TextView) view;
+                String contact = tv.getText().toString();
+
+                // grab phone
+                String phone = storedContactData.get(position).get(PHONE);
+                selected = position;
+                
+                // grab email
+                String email = storedContactData.get(position).get(EMAIL);
+                
+                // build bundle 
+                product.putExtra(Contact.NAME, contact);
+                product.putExtra(Contact.PHONE, phone);
+                product.putExtra(Contact.EMAIL, email);
+                startActivity(contact);
+            }
+        });
+        */
+		 
 		setContentView(R.layout.contacts_layout);
 		viewContactsLinearLayout = (LinearLayout)findViewById(R.id.contacts_linear_layout);
 		viewContacts_backButton = (Button)findViewById(R.id.contacts_back_button);
