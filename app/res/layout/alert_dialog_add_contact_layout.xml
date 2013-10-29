@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/alert_dialog_add_contact_name_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="@string/alertDialogAddContact_name"
+        android:inputType="textPersonName" />
+
+     <EditText
+         android:id="@+id/alert_dialog_add_contact_phone_number_edit_text"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="16dp"
+         android:hint="@string/alertDialogAddContact_phoneNumber"
+         android:layout_below="@id/alert_dialog_add_contact_name_edit_text"
+         android:inputType="phone" />
+
+      <EditText
+        android:id="@+id/alert_dialog_add_contact_email_edit_text"
+        android:inputType="textEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/alert_dialog_add_contact_phone_number_edit_text"
+        android:hint="@string/alertDialogAddContact_email"/>
+</RelativeLayout>

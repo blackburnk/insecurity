@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background= "@drawable/insecurity">
+
+    <TextView
+        android:id="@+id/profile_greeting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_name"
+        android:textColor="#FFFFFFFF"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+         android:id="@+id/profile_name_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center_horizontal"
+         android:text="@string/profile_name"
+         android:textColor="#FFFFFFFF"
+         android:layout_below="@id/profile_greeting_text"
+         android:textAppearance="?android:attr/textAppearanceMedium" 
+         android:layout_marginTop="20dp"/>
+
+     <EditText
+         android:id="@+id/profile_name_edit_text"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/profile_name_text"
+         android:inputType="textPersonName"
+         android:textColor="#FFFFFFFF" />
+	     
+    <Button
+	       android:text="@string/profile_changePassword"
+	       android:textColor="#FFFFFFFF"
+	       android:layout_width="wrap_content" 
+	       android:layout_height="wrap_content" 
+	       android:layout_below="@id/profile_name_edit_text"
+	       android:id="@+id/profile_change_password" />
+    
+    <Button
+           android:text="@string/profile_changeDistress"
+           android:textColor="#FFFFFFFF"
+           android:layout_width="wrap_content" 
+           android:layout_height="wrap_content" 
+           android:layout_below="@id/profile_change_password"
+           android:id="@+id/profile_change_distress" />
+    
+    <Button
+           android:text="@string/profile_addDeleteContact"
+           android:textColor="#FFFFFFFF"
+           android:layout_width="wrap_content" 
+           android:layout_height="wrap_content" 
+           android:layout_below="@id/profile_change_distress"
+           android:id="@+id/profile_add_delete_contact" />
+
+<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:drawingCacheQuality="auto"
+	    android:gravity="bottom"
+	    android:orientation="vertical" >
+	    
+		 <Button
+	         android:id="@+id/profile_back_button"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentBottom="true"
+	         android:layout_alignParentLeft="true"
+	         android:layout_marginBottom="20dp"
+	         android:layout_marginLeft="20dp"
+	         android:text="@string/profile_back"
+	         android:textColor="#FFFFFFFF"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+	     <Button
+	         android:id="@+id/profile_save_button"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_alignParentBottom="true"
+	         android:layout_alignParentRight="true"
+	         android:layout_marginBottom="20dp"
+	         android:layout_marginRight="20dp"
+	         android:text="@string/profile_save"
+	         android:textColor="#FFFFFFFF"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
+</RelativeLayout>

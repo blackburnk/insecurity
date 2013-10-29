@@ -91,6 +91,12 @@ implements OnMapClickListener{
      * Audio Manager used for alarming
      */
     private AudioManager audioManager;
+    
+    /**
+     * Data Miner used to collect the data points and construct a geo fence.
+     */
+    
+    private DataMiner dataMiner;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		this.savedInstanceState = savedInstanceState;		
@@ -415,16 +421,6 @@ implements OnMapClickListener{
 	  */
 	 private void setRingerMode()
 	 {
-		 /*
-		 if(audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT)
-		 {
-			
-		 }
-		 if(audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE)
-		 {
-			
-		 }
-		 */
 		 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 	 }
 	 @Override
