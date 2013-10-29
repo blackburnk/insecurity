@@ -225,6 +225,11 @@ public class DatabaseHelper {
 					+ "primary key(Sender, Receiver, Time),"
 					+ "foreign key(Sender) references CUSTOMER(Customer_ID),"
 					+ "foreign key(Receiver) references CONTACTS(Phone))");
+			// TODO: longitude and latitude map points
+			db.execSQL("CREATE TABLE POINTS ("
+					+ "Latitude real,"
+					+ "Longitude real,"
+					+ "primary key( Latitude, Longitude))");
 		}
 
 		/**
@@ -237,6 +242,7 @@ public class DatabaseHelper {
 			db.execSQL("DROP TABLE IF EXISTS \"CUSTOMER\"");
 			db.execSQL("DROP TABLE IF EXISTS \"CONTACTS\"");
 			db.execSQL("DROP TABLE IF EXISTS \"MESSAGES\"");
+			db.execSQL("DROP TABLE IF EXISTS \"POINTS\"");
 			onCreate(db);
 		}
 	}
