@@ -358,13 +358,13 @@ implements OnMapClickListener{
 		{
 			alarm.start();
 			alarm.setLooping(true);
-			audioManager.setStreamVolume(AudioManager.STREAM_ALARM,
-					audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM), AudioManager.FLAG_PLAY_SOUND);
+			audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+					audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_PLAY_SOUND);
 		}
 		else
 		{
-			audioManager.setStreamVolume(AudioManager.STREAM_ALARM,
-					audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM), AudioManager.FLAG_PLAY_SOUND);
+			audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+					audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_PLAY_SOUND);
 		}
 		final EditText input = new EditText(this);
 		 new AlertDialog.Builder(this)
