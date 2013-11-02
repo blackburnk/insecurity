@@ -93,10 +93,21 @@ implements OnMapClickListener{
     private AudioManager audioManager;
     
     /**
-     * Data Miner used to collect the data points and construct a geo fence.
+     * The Harness used to collect the data points and construct a geo fence to determine
+     * alarm responses
      */
+    private Harness harness;
     
-    private DataMiner dataMiner;
+    /**
+     * boolean to determine if the mic is currently recording sound
+     */
+    private boolean micRecording;
+    
+    /**
+     * boolean to determine if the camera is currently recording a video
+     */
+    private boolean cameraRecording;
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		this.savedInstanceState = savedInstanceState;		
@@ -116,6 +127,8 @@ implements OnMapClickListener{
 	    
 		setContentView(R.layout.insecurity_layout);
 		tracking = true;
+		harness = new Harness();
+		
 		// Try to obtain the map from the SupportMapFragment.
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
@@ -170,7 +183,6 @@ implements OnMapClickListener{
 				{
 					insecurity_onOrOffCheckBox.setText("Turn On");
 					tracking = false;
-					
 				}
 			}
 		});
@@ -194,9 +206,7 @@ implements OnMapClickListener{
 	}
 	
 	@Override
-	public void onMapClick(LatLng position) {
-		
-	}
+	public void onMapClick(LatLng position) {}
 	
 	/**
 	 * The updates the map with the Data point and places a marker on the map
@@ -205,11 +215,49 @@ implements OnMapClickListener{
 	private void updateMap(double latitude, double longitude)
 	{
 		LatLng coordinate = new LatLng(latitude, longitude);
-		//TODO add the latitude and longitude to the DataMiner
 		mMap.addMarker(new MarkerOptions()
 		.position(coordinate).
 		icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
 		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 17));
+		String [] response = harness.AddPoint(longitude, latitude);
+		if(getTime() < 1)
+		{
+			for(int x = 0; x < response.length; x++)
+			{
+				if(response[x].equals("ALARM"))
+				{
+					//set of the alarm
+					if(!alarm.isPlaying())
+					{
+						setOffAlarm();
+					}
+				}
+				else if(response[x].equals("CAMERA"))
+				{
+					//begin taking pictures and/or video
+				}
+				else if(response[x].equals("MICROPHONE"))
+				{
+					//begin recording the sound through the microphone
+					/*
+					if(!micRecording)
+					{
+						micRecording = true;
+						startMicRecording();
+					}
+					*/
+				}
+				else if(response[x].equals("TEXT_SECONDARY"))
+				{
+					//send email and text messages
+				}
+				
+			}
+		}
+		else
+		{
+			harness.AddPoint(longitude, latitude);
+		}
 	}
 	
 	/**
@@ -241,12 +289,19 @@ implements OnMapClickListener{
 		        			 double upperLon = -83.014337;
 		        			 double lon = Math.random() * (upperLon - lowerLon) + lowerLon;
 		        			 updateMap(lat, lon);
+		        			 
 		        		 }
 	        			 if(trackingTime == 170)
 	        			 {
-	        				 setOffAlarm();
+	        				 double lat = 10;
+		        			 double lon = 10;
+		        			 //updateMap(lat, lon);
 	        			 }
 	        		 }
+        		 }
+        		 else if(tracking)
+        		 {
+        			 //get map location, and update map
         		 }
         	 }
         	 @Override
@@ -289,9 +344,9 @@ implements OnMapClickListener{
 	/**
 	 * Starts recording data from the mic
 	 */
-	private void startRecording() {
+	private void startMicRecording() {
 		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecordtest.3gp";
+        mFileName += "/micRecording1.3gp";
         
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -311,7 +366,7 @@ implements OnMapClickListener{
 	/**
 	 * Stops recording the data from the mic
 	 */
-	 private void stopRecording() 
+	 private void stopMicRecording() 
 	 {
 		 if(mRecorder != null)
 		 {
@@ -325,7 +380,7 @@ implements OnMapClickListener{
 	  * Used if you want to listen to the recorded data
 	  * Starts playing the recorded data from the mic
 	  */
-	 private void startPlaying() 
+	 private void startPlayingFromMicRecording() 
 	 {
         mPlayer = new MediaPlayer();
         try {
@@ -341,7 +396,7 @@ implements OnMapClickListener{
 	  * Used if you want to listen to the recorded data
 	  * stops playing the recorded data from the mic
 	  */
-	 private void stopPlaying() {
+	 private void stopPlayingFromMicRecording() {
 		if(mPlayer != null)
 		{
 	        mPlayer.release();
@@ -358,11 +413,15 @@ implements OnMapClickListener{
 		{
 			alarm.start();
 			alarm.setLooping(true);
+			vibratePhone();
+			setRingerMode();
 			audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
 					audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_PLAY_SOUND);
 		}
 		else
 		{
+			vibratePhone();
+			setRingerMode();
 			audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
 					audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_PLAY_SOUND);
 		}
@@ -384,6 +443,10 @@ implements OnMapClickListener{
                 			alarm.release();
                 			alarm = null;
                 			alarm = MediaPlayer.create(Insecurity.this, R.raw.alarm);
+                			if(micRecording)
+                			{
+                				stopMicRecording();
+                			}
                 		}
                 		else if(id.equals(Login.currentUserSignedIn.getDistressPassword())) //if user enters the distress password
                 		{
@@ -410,12 +473,16 @@ implements OnMapClickListener{
             .create().show();
 	 }
 	 
+	 /**
+	  * Sets off a vibrate towards the phone
+	  */
 	 private void vibratePhone()
 	 {
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		// Vibrate for 500 milliseconds
 		v.vibrate(500);
 	 }
+	 
 	 /**
 	  * Sets the ringer mode to normal
 	  */
@@ -423,6 +490,7 @@ implements OnMapClickListener{
 	 {
 		 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 	 }
+	 
 	 @Override
 	 protected void onPause() {
 		 if(mPlayer != null)
