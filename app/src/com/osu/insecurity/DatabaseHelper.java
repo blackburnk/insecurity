@@ -207,6 +207,7 @@ public class DatabaseHelper {
 					+ "Customer_ID varchar(128) not null,"
 					+ "Password varchar(128) not null,"
 					+ "Code_Password varchar(128) not null"
+					+ "Security_Question varcher(128) not null"
 					+ "Description varchar(256)," 
 					+ "ImagePath varchar(500),"
 					+ "primary key(Customer_ID));");

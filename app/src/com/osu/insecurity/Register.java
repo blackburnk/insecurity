@@ -213,16 +213,23 @@ public class Register extends Activity {
 	 * Sets an alert dialog box to enter a distress signal/password
 	 */
 	/*
+	 * 
+	 *  add field on the register page for security question and text field to enter that
+	 *  
 	private void CreateAccount() {
 		String username = getUserName.getText().toString();
 		String password = getPassword.getText().toString();
 		String confirm = getPasswordConfirm.getText().toString();
+		String security = getSecurityQuestion.getText().toString();
+		String codeword = getCodeword.getText().toString();
 		if ((password.equals(confirm)) && (!username.equals(""))
-				&& (!password.equals("")) && (!confirm.equals(""))) {
+				&& (!password.equals("")) && (!confirm.equals("")) && (!security.equals("")) && (!codeword.equals(""))) {
 			this.dh = new DatabaseHelper(this);
 			List<String> parameters = new ArrayList<String>();
 			parameters.add(username);
 			parameters.add(password);
+			parameters.add(codeword);
+			parameters.add(security);
 			parameters.add("null");
 			parameters.add("null");
 
@@ -232,7 +239,7 @@ public class Register extends Activity {
 
 			/* checking to see if they exist 
 			if (!(this.dh.selectAll(exists, existParams).size() > 0)) {
-				String query = "INSERT INTO CUSTOMER VALUES(?,?,?,?)";
+				String query = "INSERT INTO CUSTOMER VALUES(?,?,?,?,?,?)";
 				this.dh.insert(query, parameters);
 
 				Toast.makeText(Account.this, "SUCCESS! Account created.",
