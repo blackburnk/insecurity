@@ -254,10 +254,7 @@ implements OnMapClickListener{
 				
 			}
 		}
-		else
-		{
-			harness.AddPoint(longitude, latitude);
-		}
+		
 	}
 	
 	/**
