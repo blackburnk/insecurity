@@ -1,6 +1,8 @@
 package com.osu.insecurity;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -210,6 +212,52 @@ public class Register extends Activity {
 	/**
 	 * Sets an alert dialog box to enter a distress signal/password
 	 */
+	/*
+	private void CreateAccount() {
+		String username = getUserName.getText().toString();
+		String password = getPassword.getText().toString();
+		String confirm = getPasswordConfirm.getText().toString();
+		if ((password.equals(confirm)) && (!username.equals(""))
+				&& (!password.equals("")) && (!confirm.equals(""))) {
+			this.dh = new DatabaseHelper(this);
+			List<String> parameters = new ArrayList<String>();
+			parameters.add(username);
+			parameters.add(password);
+			parameters.add("null");
+			parameters.add("null");
+
+			String exists = "SELECT * FROM CUSTOMER WHERE Customer_ID=?";
+			String[] existParams = new String[1];
+			existParams[0] = username;
+
+			/* checking to see if they exist 
+			if (!(this.dh.selectAll(exists, existParams).size() > 0)) {
+				String query = "INSERT INTO CUSTOMER VALUES(?,?,?,?)";
+				this.dh.insert(query, parameters);
+
+				Toast.makeText(Account.this, "SUCCESS! Account created.",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(Account.this, "Account Already Exists", Toast.LENGTH_LONG).show();
+			}
+			finish();
+		} else if ((username.equals("")) || (password.equals(""))
+				|| (confirm.equals(""))) {
+			Toast.makeText(Account.this, "ERROR! Missing entry.",
+					Toast.LENGTH_SHORT).show();
+		} else if (!password.equals(confirm)) {
+			new AlertDialog.Builder(this)
+					.setTitle("ERROR!")
+					.setMessage("Please make sure the passwords match")
+					.setNeutralButton("Try Again",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
+								}
+							}).show();
+		}
+	}
+	*/
 	private void addDistressPassword()
 	{
 		 final EditText input = new EditText(this);

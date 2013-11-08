@@ -161,7 +161,10 @@ public class Login extends Activity {
 			System.out.println(names.size());
 			System.out.println(names.toString());
 
-			if (names.size() > 0) { // Login successful
+// we need two different SELECT statements one for password and one for code password to know whether or not to set
+// off the alarm.
+
+			if (names.size() > 0) { // Login successful -- the name password pair exists in the DB
 				// Save username as the name of the player
 				SharedPreferences settings = PreferenceManager
 						.getDefaultSharedPreferences(this);
