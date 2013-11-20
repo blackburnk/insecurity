@@ -55,6 +55,14 @@
            android:layout_height="wrap_content" 
            android:layout_below="@id/profile_change_distress"
            android:id="@+id/profile_add_delete_contact" />
+    
+    <Button
+           android:text="@string/profile_viewSavedData"
+           android:textColor="#FFFFFFFF"
+           android:layout_width="wrap_content" 
+           android:layout_height="wrap_content" 
+           android:layout_below="@id/profile_add_delete_contact"
+           android:id="@+id/profile_view_saved_data" />
 
 <RelativeLayout
 	    android:layout_width="fill_parent"

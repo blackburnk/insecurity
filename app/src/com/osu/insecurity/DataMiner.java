@@ -1,16 +1,19 @@
 package com.osu.insecurity;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DataMiner implements IDataMiner {
 
-	// TODO - Have a system to hold all points
-	// Or just grab from sql database if not in memory
-	
-	Set<DataPoint> points;
 	int kThreshold;
 	double dThreshold;
+	
+	Set<DataPoint> corePoints;
+	Set<DataPoint> edgePoints;
+	Set<DataPoint> noisePoints;
+	
+	HashMap<Integer, Set<DataPoint>> clusterMap;
 	
 	/**
 	 * Constructor for DataMiner.
@@ -18,13 +21,52 @@ public class DataMiner implements IDataMiner {
 	 * @param distanceThreshold The distance to check for other points.
 	 */
 	public DataMiner(int groupMinimumSize, double distanceThreshold) {
-		points = new HashSet<DataPoint>();
+		corePoints = new HashSet<DataPoint>();
+		edgePoints = new HashSet<DataPoint>();
+		noisePoints = new HashSet<DataPoint>();
+		
+		clusterMap = new HashMap<Integer, Set<DataPoint>>();
+		
 		this.kThreshold = groupMinimumSize;
 		this.dThreshold = distanceThreshold;
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("Hello world");
+		System.out.println("This is an Implementation of DBSCAN.");
+	}
+	
+	private void SortPoint(DataPoint point) {
+		int closePoints = 0;
+		boolean isBorder = false;
+		
+		// Count number of points within d-threshold
+		
+		for (DataPoint p : this.corePoints) {
+			if (Distance(p, point) < this.dThreshold) {
+				closePoints++;
+				isBorder = true; 
+			}
+		}
+		
+		for (DataPoint p : this.edgePoints) {
+			if (Distance(p, point) < this.dThreshold) {
+				closePoints++;
+			}
+		}
+		
+		for (DataPoint p : this.noisePoints) {
+			if (Distance(p, point) < this.dThreshold) {
+				closePoints++;
+			}
+		}
+		
+		if (closePoints >= kThreshold) {
+			this.corePoints.add(point);
+		} else if (isBorder) {
+			this.edgePoints.add(point);
+		} else {
+			this.noisePoints.add(point);
+		}
 	}
 	
 	/**
@@ -38,55 +80,21 @@ public class DataMiner implements IDataMiner {
 				       + Math.pow((point1.longitude * point2.longitude), 2));
 	}
 	
-	/**
-	 * Determines if point is noise or not.
-	 * @param point - The point to classify
-	 * @param distance - The distance to check for other points.
-	 * @param threshold - The minimum number of points needed to be considered not noise.
-	 * @return If the point is noise or not.
-	 */
-	private boolean IsNoise(DataPoint point, double distance, int threshold) {
-		// Keep track of number of points within distance
-		int numberPoints = 0;
-		
-		// For each point, check if within distance
-		for (DataPoint p : points)
-		{
-			if (Distance(point, p) < distance)
-			{
-				numberPoints++;
-			}
-		}
-		
-		return numberPoints < threshold;
-	}
 
-	/**
-	 * Classify a point into a cluster.
-	 * @param point - A point that is not a noise point.
-	 * @return The cluster the point belongs to.
-	 */
-	private int ClassifyCluster(DataPoint point) {
-		
-		DataPoint closestPoint = ClosestPoint(point);
-		
-		if (closestPoint == null)
-		{
-			DataPoint.maxCluster++;
-			return DataPoint.maxCluster;
-		}
-		else
-			return closestPoint.GetCluster();
-	}
-	
 	/**
 	 * Find the closest clustered point to the given point
 	 * @param point - A point
 	 * @return The closest already clustered point, else null
 	 */
-	private DataPoint ClosestPoint(DataPoint point) {
+	private DataPoint ClosestPoint(DataPoint point, Integer cluster) {
 		DataPoint closestPoint = null;
 		double closestDistance = 1000000;
+		
+		if (!clusterMap.containsKey(cluster)) {
+			return null;
+		}
+		
+		Set<DataPoint> points = clusterMap.get(cluster); 
 		
 		// Find the closest point to the datapoint, give same cluster
 		for(DataPoint p : points) {
@@ -99,60 +107,61 @@ public class DataMiner implements IDataMiner {
 		
 		return closestPoint;
 	}
+	
+	private void AddPointToMap(DataPoint point) {
+		if (clusterMap.containsKey(point.cluster)) {
+			clusterMap.get(point.cluster).add(point);
+		} else {
+			clusterMap.put(point.cluster, new HashSet<DataPoint>());
+			clusterMap.get(point.cluster).add(point);
+		}
+	}
 
 	@Override
 	public double AddLocation(double latitude, double longitude) {
 		// All points have latitude, longitude, and cluster #
-		// When adding new point
-		//  *Determine if point is noise point
-		//  *Determine cluster number
-		//  Cluster #0 is reserved for noise points
-		//  This points will be updated periodically
-		//  and assigned to a cluster if/when there are enough
-		//  to warrent a clustering
+		// Cluster 0 is noise cluster
 		
 		double rawRisk = 0;
 		DataPoint temp = new DataPoint(latitude, longitude, 0);
 		
-		// Check if point is noise
-		if (!IsNoise(temp, dThreshold, kThreshold)) {
-			// If not noise: Figure out the cluster it belong to
-			int cluster = ClassifyCluster(temp);
-			temp.SetCluster(cluster);
+		for (DataPoint update : edgePoints) {
+			SortPoint(update);
 		}
 		
+		for (DataPoint update : noisePoints) {
+			SortPoint(update);
+		}
 		
-		// TODO - Classify security level of point
-		// Simple procedure for now, more complicated later
-		DataPoint closestPoint = ClosestPoint(temp);
+		SortPoint(temp);
+		
+		// Now cluster points
+		for (DataPoint c : this.corePoints) {
+			if (c.cluster == 0) {
+				DataPoint.maxCluster++;
+				c.cluster = DataPoint.maxCluster;
+				AddPointToMap(c);
+			}
+			
+			for (DataPoint e : this.edgePoints) {
+				if (e.cluster == 0 && Distance(c, e) < dThreshold) {
+					e.cluster = DataPoint.maxCluster;
+					AddPointToMap(e);
+				}
+			}
+		}
+			
+		int cluster = temp.cluster;
+		
+		// Calculate raw risk
+		DataPoint closestPoint = ClosestPoint(temp, cluster);
+		
 		if(closestPoint != null) {
 			rawRisk = Distance(closestPoint, temp);
 		} else {
 			rawRisk = 100000;
 		}
 		
-		
-		
 		return rawRisk;
-	}
-
-	/**
-	 * Reclassify all noise points. This updates any emerging clusters
-	 * from new high density noise areas.
-	 */
-	public void UpdateNoisePoints() {
-
-		for (DataPoint p : points)
-		{
-			// For all noise points
-			if (p.cluster == 0) {
-				// Check if point is still noise
-				if (!IsNoise(p, dThreshold, kThreshold)) {
-					// If not noise: Figure out the cluster it belong to
-					int cluster = ClassifyCluster(p);
-					p.SetCluster(cluster);
-				}
-			}		
-		}
 	}
 }

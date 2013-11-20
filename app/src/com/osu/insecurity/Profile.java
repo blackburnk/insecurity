@@ -11,6 +11,7 @@ public class Profile {
 	private String name;
 	private String password;
 	private String distressPassword;
+	private String securityQuestionAnswer;
 	
 	/**
 	 * Public constructor for a users Profile Information
@@ -21,6 +22,7 @@ public class Profile {
 		name = "";
 		password = "";
 		distressPassword = "";
+		securityQuestionAnswer = "";
 	}
 	
 	/**
@@ -33,13 +35,16 @@ public class Profile {
 	 * 				password of user
 	 * @param disressPassword
 	 * 				distress password of user
+	 * @param securityQuestionAnswer
+	 * 				security question answer of the user
 	 */
-	public Profile(String name, String email, String password, String distressPassword)
+	public Profile(String name, String email, String password, String distressPassword, String securityQuestionAnswer)
 	{
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.distressPassword = distressPassword;
+		this.securityQuestionAnswer = securityQuestionAnswer;
 	}
 	
 	/**
@@ -83,6 +88,16 @@ public class Profile {
 	}
 	
 	/**
+	 * Sets the security question answer of the user
+	 * @param security question
+	 * 			security question answer of the user
+	 */
+	public void setSecurityQuestionAnswer(String securityQuestion)
+	{
+		this.securityQuestionAnswer = securityQuestion;
+	}
+	
+	/**
 	 * Gets the name of the user
 	 * @return
 	 * 			the name of the user
@@ -120,5 +135,15 @@ public class Profile {
 	public String getDistressPassword()
 	{
 		return distressPassword;
+	}
+	
+	/**
+	 * Gets the security question answer of the user
+	 * @return 
+	 * 			the security question answer of the user
+	 */
+	public String getSecurityQuestionAnswer()
+	{
+		return securityQuestionAnswer;
 	}
 }

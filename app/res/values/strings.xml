@@ -18,9 +18,11 @@
 	<string name="register_confirmEmailAddress">Confirm Email Address</string>
 	<string name="register_password">Password</string>
 	<string name="register_confirmPassword">Confirm Password</string>
+	<string name="register_securityQuestion">Security Question: What is you favority color?</string>
 	<string name="register_back">Back</string>
 	
 	<string name="forgotPassword_emailAddress">Email Address</string>
+	<string name="forgotPassword_securityQuestion">Security Question: What is you favorite color?</string>
 	<string name="forgotPassword_sendPasswordButton">Send Password</string>
 	<string name="forgotPassword_back">Back</string>
 	
@@ -32,12 +34,16 @@
 	<string name="profile_changePassword">Change Password</string>
 	<string name="profile_changeDistress">Change Distress</string>
 	<string name="profile_addDeleteContact">Add/Delete Contact</string>
+	<string name="profile_viewSavedData">View Saved Data</string>
 	<string name="profile_save">Save</string>
 	<string name="profile_back">Back</string>
 	
 	<string name="contacts_back">Back</string>
 	<string name="contacts_add_contact">Add</string>
 	<string name="contacts_delete_contact">Delete</string>
+	
+	<string name="savedData_startStopPlyingRecordedSoundButton">Start Playing Recorded Sounds</string>
+	<string name="savedData_viewSavedPicturesAndVideosButton">View Saved Pictures And Videos</string>
 	
 	<string name="alertDialogChangePassword_oldPassword">Old Password</string>
 	<string name="alertDialogChangePassword_newPassword">New Password</string>

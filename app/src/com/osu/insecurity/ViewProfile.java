@@ -27,6 +27,7 @@ public class ViewProfile extends Activity {
 	private Button viewProfile_changePasswordButton;
 	private Button viewProfile_changeDistressButton;
 	private Button viewProfile_addDeleteContactButton;
+	private Button viewProfile_viewSavedDataButton;
 	private Button viewProfile_backButton;
 	private Button viewProfile_saveButton;
 	private EditText viewProfile_alertDialog_oldDistressEditText;
@@ -87,6 +88,7 @@ public class ViewProfile extends Activity {
 		viewProfile_changePasswordButton = (Button)findViewById(R.id.profile_change_password);
 		viewProfile_changeDistressButton = (Button)findViewById(R.id.profile_change_distress);
 		viewProfile_addDeleteContactButton = (Button)findViewById(R.id.profile_add_delete_contact);
+		viewProfile_viewSavedDataButton = (Button)findViewById(R.id.profile_view_saved_data);
 		viewProfile_backButton = (Button)findViewById(R.id.profile_back_button);
 		viewProfile_saveButton = (Button)findViewById(R.id.profile_save_button);
 		
@@ -128,6 +130,17 @@ public class ViewProfile extends Activity {
   			{
   				//go to the add/delete contact page
   				startActivity(new Intent ("com.osu.insecurity.CONTACTS"));
+  			}
+  		});
+		
+		//sets up the interaction when the user add/delete contact back button
+		viewProfile_viewSavedDataButton.setOnClickListener(new View.OnClickListener() 
+  		{
+  			@Override
+  			public void onClick(View v) 
+  			{
+  				//go to the add/delete contact page
+  				startActivity(new Intent ("com.osu.insecurity.DATA"));
   			}
   		});
 		

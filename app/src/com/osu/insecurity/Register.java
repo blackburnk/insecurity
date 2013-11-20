@@ -25,6 +25,7 @@ public class Register extends Activity {
 	 * register_confirmEmailAddressEditText = confirm email address edit text
 	 * register_passwordEditText = password edit text
 	 * register_confirmPasswordEditText = confirm password edit text
+	 * register_securityQuestionEditText = security question edit text
 	 */
 	private Button register_registerButton;
 	private Button register_backButton;
@@ -33,6 +34,7 @@ public class Register extends Activity {
 	private EditText register_confirmEmailAddressEditText;
 	private EditText register_passwordEditText;
 	private EditText register_confirmPasswordEditText;
+	private EditText register_securityQuestionEditText;
 	
 	/**
 	 * The email address already taken Toast string
@@ -91,53 +93,62 @@ public class Register extends Activity {
 					{
 						if(register_confirmPasswordEditText.getText().toString().length() != 0 ) //check to see if the user has entered a confirmed password
 						{
-							if(register_emailAddressEditText.getText().toString().equals(register_confirmEmailAddressEditText.getText().toString()))
+							if(register_securityQuestionEditText.getText().toString().length() != 0) //check to see if the user has entered an answer to the security question
 							{
-								if(register_passwordEditText.getText().toString().equals(register_confirmPasswordEditText.getText().toString()))
+								if(register_emailAddressEditText.getText().toString().equals(register_confirmEmailAddressEditText.getText().toString()))
 								{
-									if(register_emailAddressEditText.getText().toString().matches(Login.EMAIL_PATTERN))
+									if(register_passwordEditText.getText().toString().equals(register_confirmPasswordEditText.getText().toString()))
 									{
-										//check database for taken email address or register 
-										Profile request = null;
-										Iterator<Profile> iter = Login.database.iterator();
-										String email = register_emailAddressEditText.getText().toString();
-										String password = register_passwordEditText.getText().toString();
-										String name = register_nameEditText.getText().toString();
-										while(iter.hasNext())
+										if(register_emailAddressEditText.getText().toString().matches(Login.EMAIL_PATTERN))
 										{
-											Profile next = iter.next();
-											if(next.getEmail().equals(email)) //check the email with the data base to check for existence
+											//check database for taken email address or register 
+											Profile request = null;
+											Iterator<Profile> iter = Login.database.iterator();
+											String email = register_emailAddressEditText.getText().toString();
+											String password = register_passwordEditText.getText().toString();
+											String name = register_nameEditText.getText().toString();
+											String securityAnswer = register_securityQuestionEditText.getText().toString();
+											while(iter.hasNext())
 											{
-												request = next;
+												Profile next = iter.next();
+												if(next.getEmail().equals(email)) //check the email with the data base to check for existence
+												{
+													request = next;
+												}
 											}
+											
+											if(request == null)
+											{
+												//save information
+												success = true;
+												newPI = new Profile();
+												newPI.setEmail(email);
+												newPI.setPassword(password);
+												newPI.setName(name);
+												newPI.setSecurityQuestionAnswer(securityAnswer);
+											}
+											else
+											{
+												Toast.makeText(getApplicationContext(), REGISTER_TAKEN_EMAIL_ADDRESS, Toast.LENGTH_SHORT).show();
+											}
+											
 										}
-										
-										if(request == null)
+										else //have not entered a valid email address
 										{
-											//save information
-											success = true;
-											newPI = new Profile();
-											newPI.setEmail(email);
-											newPI.setPassword(password);
-											newPI.setName(name);
+											Toast.makeText(getApplicationContext(), REGISTER_REGISTRATION_INVALID, Toast.LENGTH_SHORT).show();
 										}
-										else
-										{
-											Toast.makeText(getApplicationContext(), REGISTER_TAKEN_EMAIL_ADDRESS, Toast.LENGTH_SHORT).show();
-										}
-										
 									}
-									else //have not entered a valid email address
+									else //passwords do not match
 									{
-										Toast.makeText(getApplicationContext(), REGISTER_REGISTRATION_INVALID, Toast.LENGTH_SHORT).show();
+										Toast.makeText(getApplicationContext(), PASSWORDS_DO_NOT_MATCH, Toast.LENGTH_SHORT).show();
 									}
 								}
-								else //passwords do not match
+								else //email addresses do not match
 								{
-									Toast.makeText(getApplicationContext(), PASSWORDS_DO_NOT_MATCH, Toast.LENGTH_SHORT).show();
+									Toast.makeText(getApplicationContext(), EMAILS_DO_NOT_MATCH, Toast.LENGTH_SHORT).show();
 								}
 							}
-							else //email addresses do not match
+							else //didn't enter an answer to security question
 							{
 								Toast.makeText(getApplicationContext(), EMAILS_DO_NOT_MATCH, Toast.LENGTH_SHORT).show();
 							}
@@ -183,6 +194,7 @@ public class Register extends Activity {
 		register_confirmEmailAddressEditText = (EditText) findViewById(R.id.register_confirm_email_address_edit_text);;
 		register_passwordEditText = (EditText) findViewById(R.id.register_password_edit_text);
 		register_confirmPasswordEditText = (EditText) findViewById(R.id.register_confirm_password_edit_text);
+		register_securityQuestionEditText = (EditText) findViewById(R.id.register_security_question_edit_text);
 		
 		//sets up the interaction when the user clicks the register button
 		register_registerButton.setOnClickListener(new View.OnClickListener() 

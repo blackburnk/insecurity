@@ -3,7 +3,6 @@ package com.osu.insecurity;
 import java.util.Iterator;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
@@ -18,18 +17,15 @@ public class ForgotPassword extends Activity {
 	/**
 	 * Below are the controls for the forgot password menu
 	 * forgotPassword_emailAddressEditText = email address edit text
+	 * forgotPassword_securityQuestionEditText = security question edit text
 	 * forgotPassword_sendPassword = send password button
 	 * forgotPassword_backButton = back text view
 	 */
 	private EditText forgotPassword_emailAddressEditText;
+	private EditText forgotPassword_securityQuestionEditText;
 	private Button forgotPassword_sendPassword;
 	private Button forgotPassword_backButton;
 	
-
-	/**
-	 * The successful password sent Toast string
-	 */
-	private static final String FORGOT_PASSWORD_EMAIL_SENT = "Password sent to email";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +44,7 @@ public class ForgotPassword extends Activity {
 		setContentView(R.layout.forgot_password_layout);
 		
 		forgotPassword_emailAddressEditText = (EditText) findViewById(R.id.forgotPassword_email_address_edit_text);
+		forgotPassword_securityQuestionEditText = (EditText) findViewById(R.id.forgotPassword_security_question_edit_text);
 		forgotPassword_sendPassword = (Button) findViewById(R.id.forgotPassword_send_password_button);
 		forgotPassword_backButton = (Button) findViewById(R.id.forgotPassword_back_button);
 		
@@ -59,7 +56,6 @@ public class ForgotPassword extends Activity {
 			{
 				if(passwordSent())
 				{
-					Toast.makeText(getApplicationContext(), FORGOT_PASSWORD_EMAIL_SENT, Toast.LENGTH_SHORT).show();
 					Login.forgotEmail = forgotPassword_emailAddressEditText.getText().toString();
 					forgotPassword_emailAddressEditText.setText("");
 					Login.updateFields();
@@ -104,18 +100,14 @@ public class ForgotPassword extends Activity {
 		    
 		    if(pi != null && success)
 			{
-				//send the password to that email
-		    	String email [] = new String[] {forgotPassword_emailAddressEditText.getText().toString()}; 
-		    	Intent emailIntent = new Intent (Intent.ACTION_SEND);
-		    	emailIntent.putExtra (Intent.EXTRA_EMAIL, email);
-		    	emailIntent.putExtra (Intent.EXTRA_SUBJECT, "Password Request");
-		    	emailIntent.putExtra (Intent.EXTRA_TEXT, "Hi " + pi.getName() + ", your password is " + pi.getPassword());
-		    	emailIntent.setType ("message/rfc822");
-		    	try {
-		    	    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-		    	} catch (android.content.ActivityNotFoundException ex) {
-		    	    Toast.makeText(getApplicationContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-		    	}
+				if(pi.getSecurityQuestionAnswer().equals(forgotPassword_securityQuestionEditText.getText().toString()))
+				{
+					Toast.makeText(getApplicationContext(), "Your password is \"" + pi.getPassword() + "\"", Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					Toast.makeText(getApplicationContext(), "You have an invalid answer for the security question", Toast.LENGTH_SHORT).show();
+				}
 			}
 			else
 			{

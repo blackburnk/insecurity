@@ -9,22 +9,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -280,7 +274,7 @@ public class Login extends Activity {
 		while(iter.hasNext())
 		{
 			Profile next = iter.next();
-			if(next.getEmail().equals("hopkinscameron@gmail.com")) //TODO change back to buckeye.1@osu.edu and in the database file
+			if(next.getEmail().equals("buckeye.1@osu.edu")) //TODO change back to buckeye.1@osu.edu and in the database file
 			{
 				temp = next;
 			}
@@ -292,6 +286,7 @@ public class Login extends Activity {
 		{
 			login_emailAddressEditText.setText(forgotEmail);
 			forgotEmail = "";
+			login_passwordEditText.setText("");
 		}
 		else if(savedEmail != null && !savedEmail.equals("")) //see if the user has saved their email and password from last login
 		{
@@ -466,10 +461,12 @@ public class Login extends Activity {
 		String email = "";
 		String password = "";
 		String distress = "";
+		String security = "";
 		boolean onName = true;
 		boolean onEmail = true;
 		boolean onPassword = true;
 		boolean onDistress = true;
+		boolean onSecurity = true;
 		while(br.ready())
 		{
 			char c = (char) br.read();// sets c as the character read from the buffered reader
@@ -490,15 +487,21 @@ public class Login extends Activity {
 					onPassword = false;
 					onDistress = true;
 				}
+				else if(onDistress)
+				{
+					onDistress = false;
+					onSecurity = true;
+				}
 			}
 			else if(c == ';') //check to see if end of line
 			{
-				Profile newPI = new Profile(name, email, password, distress);
+				Profile newPI = new Profile(name, email, password, distress, security);
 				database.add(newPI);
 				name = "";
 				email = "";
 				password = "";
 				distress = "";
+				security = "";
 				onDistress = false;
 				onName = true;
 			}
@@ -519,6 +522,10 @@ public class Login extends Activity {
 				else if(onDistress)
 				{
 					distress = distress + c;
+				}
+				else if(onSecurity)
+				{
+					security = security + c;
 				}
 			}
 		}

@@ -6,7 +6,7 @@ public class DataPoint {
 	double longitude;
 	int cluster;
 	
-	public static int maxCluster = 1;
+	public static int maxCluster = 0;
 	
 	public DataPoint(double latitude, double longitude, int cluster)
 	{

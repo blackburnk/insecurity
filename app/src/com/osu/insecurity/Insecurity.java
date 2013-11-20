@@ -174,15 +174,18 @@ implements OnMapClickListener{
 			@Override
 			public void onClick(View v) 
 			{
-				if(insecurity_onOrOffCheckBox.isChecked())
+				if(!alarm.isPlaying()) 
 				{
-					insecurity_onOrOffCheckBox.setText("Turn Off");
-					tracking = true;
-				}
-				else
-				{
-					insecurity_onOrOffCheckBox.setText("Turn On");
-					tracking = false;
+					if(insecurity_onOrOffCheckBox.isChecked())
+					{
+						insecurity_onOrOffCheckBox.setText("Turn Off");
+						tracking = true;
+					}
+					else
+					{
+						insecurity_onOrOffCheckBox.setText("Turn On");
+						tracking = false;
+					}
 				}
 			}
 		});
@@ -373,33 +376,6 @@ implements OnMapClickListener{
 		 }
 	 }
 	 
-	 /**
-	  * Used if you want to listen to the recorded data
-	  * Starts playing the recorded data from the mic
-	  */
-	 private void startPlayingFromMicRecording() 
-	 {
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(mFileName);
-            mPlayer.prepare();
-            mPlayer.start();
-        } catch (IOException e) {
-        	 Toast.makeText(getApplicationContext(), "Cant play recorded sound", Toast.LENGTH_SHORT ).show();
-        }
-	 }
-
-	 /**
-	  * Used if you want to listen to the recorded data
-	  * stops playing the recorded data from the mic
-	  */
-	 private void stopPlayingFromMicRecording() {
-		if(mPlayer != null)
-		{
-	        mPlayer.release();
-	        mPlayer = null;
-		}
-	 }
 	 
 	 /**
 	  * Sets off the alarm

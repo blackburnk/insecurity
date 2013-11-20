@@ -9,9 +9,4 @@ public interface IDataMiner {
 	 * @return The raw warning level of adding the new point.
 	 */
 	double AddLocation(double latitude, double longitude);
-	
-	/**
-	 * Go through data points again, re-clustering all noise points if applicable. 
-	 */
-	void UpdateNoisePoints();
 }

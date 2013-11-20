@@ -103,6 +103,24 @@
 	         android:textColor="#FFFFFFFF"
 	         android:inputType="textPassword" />
 	     
+	      <TextView
+	         android:id="@+id/register_security_queston_text"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="center_vertical"
+	         android:layout_below="@id/register_confirm_password_edit_text"
+	         android:text="@string/register_securityQuestion"
+	         android:textColor="#FFFFFFFF"
+	         android:textAppearance="?android:attr/textAppearanceMedium" />
+	     
+	     <EditText
+	         android:id="@+id/register_security_question_edit_text"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_below="@id/register_security_queston_text"
+	         android:textColor="#FFFFFFFF"
+	         android:inputType="textPassword" />
+	     
     </RelativeLayout>
    	<RelativeLayout
 	    android:layout_width="fill_parent"
