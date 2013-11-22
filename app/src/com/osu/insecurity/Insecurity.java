@@ -217,11 +217,6 @@ implements OnMapClickListener{
 	 */
 	private void updateMap(double latitude, double longitude)
 	{
-		LatLng coordinate = new LatLng(latitude, longitude);
-		mMap.addMarker(new MarkerOptions()
-		.position(coordinate).
-		icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
-		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 17));
 		String [] response = harness.AddPoint(longitude, latitude);
 		if(getTime() < 1)
 		{
@@ -242,13 +237,13 @@ implements OnMapClickListener{
 				else if(response[x].equals("MICROPHONE"))
 				{
 					//begin recording the sound through the microphone
-					/*
+					
 					if(!micRecording)
 					{
 						micRecording = true;
 						startMicRecording();
 					}
-					*/
+					
 				}
 				else if(response[x].equals("TEXT_SECONDARY"))
 				{
@@ -256,6 +251,14 @@ implements OnMapClickListener{
 				}
 				
 			}
+		}
+		else
+		{
+			LatLng coordinate = new LatLng(latitude, longitude);
+			mMap.addMarker(new MarkerOptions()
+			.position(coordinate).
+			icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinate, 17));
 		}
 		
 	}
@@ -277,6 +280,7 @@ implements OnMapClickListener{
 	        		 {
 	        			 setTime(getTime()-1); 
 	        			 count = 0;
+	        			 /* Used for testing purposes
 	        			 if(trackingTime % 10 == 0) //every 10 seconds get a gps coordinate
 		        		 {
 		        			 //range lat = 40.002306 and 40.002454
@@ -297,6 +301,31 @@ implements OnMapClickListener{
 		        			 double lon = 10;
 		        			 //updateMap(lat, lon);
 	        			 }
+	        			 */
+	        			 
+	        			 //set up the location manager to get Latituded and Longitude position
+	        		        LocationManager locationManager;
+	        		        String svcName= Context.LOCATION_SERVICE;
+	        		        locationManager = (LocationManager)getSystemService(svcName);
+
+	        		        //set the necessary criteria for the location
+	        		        Criteria criteria = new Criteria();
+	        		        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+	        		        criteria.setPowerRequirement(Criteria.POWER_LOW);
+	        		        criteria.setAltitudeRequired(false);
+	        		        criteria.setBearingRequired(false);
+	        		        criteria.setSpeedRequired(false);
+	        		        criteria.setCostAllowed(true);
+	        		        String provider = locationManager.getBestProvider(criteria, true);
+	        		        
+	        		        
+	        		        Location l = locationManager.getLastKnownLocation(provider);
+	        		        
+	        		        if(l != null) //check to see if the location was found
+	        		        {
+	        			        updateMap(l.getLatitude(), l.getLongitude());
+	        			        
+	        		        }
 	        		 }
         		 }
         		 else if(tracking)

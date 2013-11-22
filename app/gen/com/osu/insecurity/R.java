@@ -252,6 +252,9 @@ containing a value of this type.
         public static final int saved_data_view_pictures_and_videos_button=0x7f06003e;
         public static final int terrain=0x7f060003;
     }
+    public static final class integer {
+        public static final int google_play_services_version=0x7f080000;
+    }
     public static final class layout {
         public static final int alert_dialog_add_contact_layout=0x7f030000;
         public static final int alert_dialog_change_distress_layout=0x7f030001;
@@ -429,15 +432,15 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
-        public static final int ButtonBar=0x7f080003;
-        public static final int ButtonBarButton=0x7f080004;
-        public static final int FullscreenActionBarStyle=0x7f080005;
-        public static final int FullscreenTheme=0x7f080002;
+        public static final int AppTheme=0x7f090001;
+        public static final int ButtonBar=0x7f090003;
+        public static final int ButtonBarButton=0x7f090004;
+        public static final int FullscreenActionBarStyle=0x7f090005;
+        public static final int FullscreenTheme=0x7f090002;
     }
     public static final class styleable {
         /** 
